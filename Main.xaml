@@ -1,4 +1,4 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="Main" mva:VisualBasic.Settings="{x:Null}" sap:VirtualizedContainerService.HintSize="670,1297" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="Main" mva:VisualBasic.Settings="{x:Null}" sap:VirtualizedContainerService.HintSize="599,2057" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
       <x:String>System.Activities</x:String>
@@ -81,18 +81,36 @@
       <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Bot" sap:VirtualizedContainerService.HintSize="509,1436" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Bot" sap:VirtualizedContainerService.HintSize="509,1992" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
-      <Variable x:TypeArguments="x:Int32" Name="nDelay">
-        <Variable.Default>
-          <Literal x:TypeArguments="x:Int32" Value="5" />
-        </Variable.Default>
-      </Variable>
+      <Variable x:TypeArguments="x:Int32" Default="5" Name="nDelay" />
       <Variable x:TypeArguments="x:Int32" Default="6" Name="nGiveUp" />
       <Variable x:TypeArguments="x:Double" Default="0.1" Name="rStartUp" />
-      <Variable x:TypeArguments="x:Int32" Name="nStartUp">
+      <Variable x:TypeArguments="x:Int32" Default="1" Name="nStartUp" />
+      <Variable x:TypeArguments="s:Int32[]" Name="listPrevBetAmount">
         <Variable.Default>
-          <Literal x:TypeArguments="x:Int32" Value="1" />
+          <mva:VisualBasicValue x:TypeArguments="s:Int32[]" ExpressionText="{}{0,0,0,0,0,0}" />
+        </Variable.Default>
+      </Variable>
+      <Variable x:TypeArguments="x:Double" Default="40" Name="rLoseLimit" />
+      <Variable x:TypeArguments="x:Int32" Name="nLoseLimit">
+        <Variable.Default>
+          <Literal x:TypeArguments="x:Int32" Value="400" />
+        </Variable.Default>
+      </Variable>
+      <Variable x:TypeArguments="x:Double" Name="rWinLimit">
+        <Variable.Default>
+          <Literal x:TypeArguments="x:Double" Value="40" />
+        </Variable.Default>
+      </Variable>
+      <Variable x:TypeArguments="x:Int32" Name="nWinLimit">
+        <Variable.Default>
+          <Literal x:TypeArguments="x:Int32" Value="400" />
+        </Variable.Default>
+      </Variable>
+      <Variable x:TypeArguments="x:Int32" Name="nCurrentEarn">
+        <Variable.Default>
+          <Literal x:TypeArguments="x:Int32" />
         </Variable.Default>
       </Variable>
     </Sequence.Variables>
@@ -116,13 +134,35 @@
         <OutArgument x:TypeArguments="x:Double">[rStartUp]</OutArgument>
       </ui:InputDialog.Result>
     </ui:InputDialog>
-    <ui:InvokeCode ContinueOnError="{x:Null}" Code="nStartUp = CInt(rStartUp*10)" DisplayName="Invoke code" sap:VirtualizedContainerService.HintSize="467,164" sap2010:WorkflowViewState.IdRef="InvokeCode_6">
+    <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Settings" sap:VirtualizedContainerService.HintSize="467,238" sap2010:WorkflowViewState.IdRef="InputDialog_4" IsPassword="False" Label="Win Limit" Title="Bot Setting">
+      <ui:InputDialog.Result>
+        <OutArgument x:TypeArguments="x:Double">[rWinLimit]</OutArgument>
+      </ui:InputDialog.Result>
+    </ui:InputDialog>
+    <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Settings" sap:VirtualizedContainerService.HintSize="467,238" sap2010:WorkflowViewState.IdRef="InputDialog_5" IsPassword="False" Label="Lose Limit" Title="Bot Setting">
+      <ui:InputDialog.Result>
+        <OutArgument x:TypeArguments="x:Double">[rLoseLimit]</OutArgument>
+      </ui:InputDialog.Result>
+    </ui:InputDialog>
+    <ui:InvokeCode ContinueOnError="{x:Null}" Code="nStartUp = CInt(rStartUp*10)&#xD;&#xA;nWinLimit = CInt(rWinLimit*10)&#xD;&#xA;nLoseLimit= CInt(rLoseLimit*10)" DisplayName="Invoke code" sap:VirtualizedContainerService.HintSize="467,164" sap2010:WorkflowViewState.IdRef="InvokeCode_6">
       <ui:InvokeCode.Arguments>
         <InArgument x:TypeArguments="x:Double" x:Key="rStartUp">
           <mva:VisualBasicValue x:TypeArguments="x:Double" ExpressionText="rStartUp" />
         </InArgument>
         <InOutArgument x:TypeArguments="x:Int32" x:Key="nStartUp">
           <mva:VisualBasicReference x:TypeArguments="x:Int32" ExpressionText="nStartUp" />
+        </InOutArgument>
+        <InArgument x:TypeArguments="x:Double" x:Key="rWinLimit">
+          <mva:VisualBasicValue x:TypeArguments="x:Double" ExpressionText="rWinLimit" />
+        </InArgument>
+        <InOutArgument x:TypeArguments="x:Int32" x:Key="nWinLimit">
+          <mva:VisualBasicReference x:TypeArguments="x:Int32" ExpressionText="nWinLimit" />
+        </InOutArgument>
+        <InArgument x:TypeArguments="x:Double" x:Key="rLoseLimit">
+          <mva:VisualBasicValue x:TypeArguments="x:Double" ExpressionText="rLoseLimit" />
+        </InArgument>
+        <InOutArgument x:TypeArguments="x:Int32" x:Key="nLoseLimit">
+          <mva:VisualBasicReference x:TypeArguments="x:Int32" ExpressionText="nLoseLimit" />
         </InOutArgument>
       </ui:InvokeCode.Arguments>
     </ui:InvokeCode>
@@ -165,7 +205,7 @@
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
             <ui:MaximizeWindow Window="{x:Null}" DisplayName="Maximize Window" sap:VirtualizedContainerService.HintSize="200,22" sap2010:WorkflowViewState.IdRef="MaximizeWindow_1" />
-            <Flowchart DisplayName="Bet on Bitsler" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="Flowchart_1">
+            <Flowchart DisplayName="Bet on Bitsler" sap:VirtualizedContainerService.HintSize="734,986" sap2010:WorkflowViewState.IdRef="Flowchart_1">
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
                   <x:Boolean x:Key="IsExpanded">False</x:Boolean>
@@ -177,9 +217,9 @@
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
               <Flowchart.StartNode>
-                <x:Reference>__ReferenceID18</x:Reference>
+                <x:Reference>__ReferenceID25</x:Reference>
               </Flowchart.StartNode>
-              <FlowStep x:Name="__ReferenceID18">
+              <FlowStep x:Name="__ReferenceID25">
                 <sap:WorkflowViewStateService.ViewState>
                   <scg:Dictionary x:TypeArguments="x:String, x:Object">
                     <av:Point x:Key="ShapeLocation">230,144.5</av:Point>
@@ -187,7 +227,7 @@
                     <av:PointCollection x:Key="ConnectorLocation">330,195.5 330,244.5</av:PointCollection>
                   </scg:Dictionary>
                 </sap:WorkflowViewStateService.ViewState>
-                <Flowchart DisplayName="Determine put" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="Flowchart_3">
+                <Flowchart DisplayName="Determine put" sap:VirtualizedContainerService.HintSize="634,636" sap2010:WorkflowViewState.IdRef="Flowchart_3">
                   <sap:WorkflowViewStateService.ViewState>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
                       <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -197,29 +237,60 @@
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
                   <Flowchart.StartNode>
-                    <x:Reference>__ReferenceID0</x:Reference>
+                    <x:Reference>__ReferenceID5</x:Reference>
                   </Flowchart.StartNode>
-                  <FlowStep x:Name="__ReferenceID0">
+                  <FlowStep x:Name="__ReferenceID5">
                     <sap:WorkflowViewStateService.ViewState>
                       <scg:Dictionary x:TypeArguments="x:String, x:Object">
                         <av:Point x:Key="ShapeLocation">200,114.5</av:Point>
                         <av:Size x:Key="ShapeSize">200,51</av:Size>
+                        <av:PointCollection x:Key="ConnectorLocation">300,165.5 300,195.5 300.141666666667,195.5 300.141666666667,196.5</av:PointCollection>
                       </scg:Dictionary>
                     </sap:WorkflowViewStateService.ViewState>
-                    <ui:InvokeCode ContinueOnError="{x:Null}" Code="try{&#xA;&#x9;if(bSkip){&#xA;&#x9;&#x9;Console.WriteLine(&quot;Skip Turn&quot;);&#xA;&#x9;&#x9;for(int i=0; i&lt;6; i++){&#xA;&#x9;&#x9;&#x9;if(listBet[i]&gt;=0)&#xA;&#x9;&#x9;&#x9;{&#xA;&#x9;&#x9;&#x9;&#x9;listPutChip[i]++;&#xA;&#x9;&#x9;&#x9;&#x9;listPutChip[(i/2)*2 + (1-i%2)]++;&#xA;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;}&#xA;&#x9;&#x9;bSkip = false;&#xA;&#x9;&#x9;return;&#xA;&#x9;}&#xA;&#x9;listPutPoint.Clear();&#xA;&#xA;&#x9;Console.WriteLine(&quot;-----------------&quot;);&#xA;&#x9;bool bBet = false;&#xA;&#x9;List&lt;String&gt; listWork;&#xA;&#x9;if(listResult_YZ.Count()&lt;nDelay){&#xA;&#x9;&#x9;Console.WriteLine(&quot;&lt;Delay&quot;);&#xA;&#x9;&#x9;listPutPoint.Add(0);&#xA;&#x9;&#x9;listPutPoint.Add(1);&#xA;&#x9;&#x9;return;&#xA;&#x9;}&#xA;&#x9;&#xA;&#x9;for(int index = 0; index&lt;6; index++){&#xA;&#x9;&#x9;if(index&lt;2)&#xA;&#x9;&#x9;&#x9;listWork = listResult_YZ;&#xA;&#x9;&#x9;else if(index&lt;4)&#xA;&#x9;&#x9;&#x9;listWork = listResult_OE;&#xA;&#x9;&#x9;else&#xA;&#x9;&#x9;&#x9;listWork = listResult_FS;&#xA;&#x9;&#x9;&#xA;&#x9;&#x9;if(listBet[index] &gt;= 0){&#xA;&#x9;&#x9;&#x9;if(listLose[index] == true){&#xA;&#x9;&#x9;&#x9;&#x9;if((listBet[index] == 0 || listBet[index] == 2 || listBet[index] == 3) &amp;&amp; listWork[0] != listPattern[index]){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = false;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listBet[index] = -1;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index] = 0;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)] = 0;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Win on Lose Return To Delay&quot;);&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;continue;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;if((listBet[index] == 1 || listBet[index] == 4 || listBet[index] == 5) &amp;&amp; listWork[0] == listPattern[index]){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = false;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listBet[index] = -1;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index] = 0;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)] = 0;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Win on Lose Return To Delay&quot;);&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;continue;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;if(listPutChip[index] &gt;= (nGiveUp-1)){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(nGiveUp + &quot; Times Lose Return To Delay&quot;);&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = false;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listBet[index] = -1;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index] = 0;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)] = 0;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;continue;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;listPutChip[index]++;&#xA;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)]++;&#xA;&#x9;&#x9;&#x9;&#x9;listBet[index] = (listBet[index]+1) % 6;&#xA;&#x9;&#x9;&#x9;&#x9;if(listBet[index] == 0 || listBet[index] == 2 || listBet[index] == 3)&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add((index/2)*2 + (1-index%2));&#xA;&#x9;&#x9;&#x9;&#x9;else&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add(index);&#xA;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Lose on Lose Double Bet&quot; + &quot; : &quot; + listPattern[index] + &quot;-&quot; + listPattern[listPutPoint[listPutPoint.Count()-1]]);&#xA;&#x9;&#x9;&#x9;&#x9;bBet = true;&#xA;&#x9;&#x9;&#x9;} else {&#xA;&#x9;&#x9;&#x9;&#x9;if((listBet[index] == 0 || listBet[index] == 2 || listBet[index] == 3) &amp;&amp; listWork[0] == listPattern[index]){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Lose Double Bet&quot;);&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index]++;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)]++;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = true;&#xA;&#x9;&#x9;&#x9;&#x9;} else if((listBet[index] == 1 || listBet[index] == 4 || listBet[index] == 5) &amp;&amp; listWork[0] != listPattern[index]){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Lose Double Bet&quot;);&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index]++;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)]++;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = true;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;bBet = true;&#xA;&#x9;&#x9;&#x9;&#x9;listBet[index] = (listBet[index]+1) % 6;&#xA;&#x9;&#x9;&#x9;&#x9;if(listBet[index] == 0 || listBet[index] == 2 || listBet[index] == 3)&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add((index/2)*2 + (1-index%2));&#xA;&#x9;&#x9;&#x9;&#x9;else&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add(index);&#xA;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Bet&quot; + &quot; : &quot; + listPattern[index] + &quot;-&quot; + listPattern[listPutPoint[listPutPoint.Count()-1]]);&#xA;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;}else{&#xA;&#x9;&#x9;&#x9;bool bPattern = true;&#xA;&#x9;&#x9;&#x9;for(int j=0; j&lt;nDelay; j++){&#xA;&#x9;&#x9;&#x9;&#x9;if(listWork[j] != listPattern[index]){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;bPattern = false;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;if(bPattern){&#xA;&#x9;&#x9;&#x9;&#x9;bBet = true;&#xA;&#x9;&#x9;&#x9;&#x9;listBet[index] = 0;&#xA;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add((index/2) * 2 + (1-index%2));&#xA;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Pattern Detect Start Betting&quot; + &quot; : &quot; + listPattern[index] + &quot;-&quot; + listPattern[listPutPoint[listPutPoint.Count()-1]]);&#xA;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;}&#xA;&#x9;}&#xA;&#x9;&#xA;&#x9;if(bBet == false){&#xA;&#x9;&#x9;Console.WriteLine(&quot;Delay&quot;);&#xA;&#x9;&#x9;listPutPoint.Add(0);&#xA;&#x9;&#x9;listPutPoint.Add(1);&#xA;&#x9;}&#x9;&#xA;} catch (Exception e) {&#xA;&#x9;Console.WriteLine(e.ToString());&#xA;}&#xA;" DisplayName="Determine" sap:VirtualizedContainerService.HintSize="334,164" sap2010:WorkflowViewState.IdRef="InvokeCode_2" Language="CSharp">
+                    <ui:InvokeCode ContinueOnError="{x:Null}" Code="try{&#xD;&#xA;&#x9;if(bSkip){&#xD;&#xA;&#x9;&#x9;Console.WriteLine(&quot;Skip Turn&quot;);&#xD;&#xA;&#x9;&#x9;for(int i=0; i&lt;listPattern.Length; i++)&#xD;&#xA;&#x9;&#x9;&#x9;nCurrentEarn -= listPrevBetAmount[i];&#xD;&#xA;&#x9;&#x9;for(int i=0; i&lt;6; i++){&#xD;&#xA;&#x9;&#x9;&#x9;if(listBet[i]&gt;=0)&#xD;&#xA;&#x9;&#x9;&#x9;{&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listPutChip[i]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listPutChip[(i/2)*2 + (1-i%2)]++;&#xD;&#xA;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;bSkip = false;&#xD;&#xA;&#x9;&#x9;return;&#xD;&#xA;&#x9;}&#xD;&#xA;&#x9;listPutPoint.Clear();&#xD;&#xA;&#xD;&#xA;&#x9;Console.WriteLine(&quot;-----------------&quot;);&#xD;&#xA;&#x9;bool bBet = false;&#xD;&#xA;&#x9;List&lt;String&gt; listWork;&#xD;&#xA;&#x9;if(listResult_YZ.Count()&lt;nDelay){&#xD;&#xA;&#x9;&#x9;Console.WriteLine(&quot;&lt;Delay&quot;);&#xD;&#xA;&#x9;&#x9;listPutPoint.Add(0);&#xD;&#xA;&#x9;&#x9;listPutPoint.Add(1);&#xD;&#xA;&#x9;&#x9;return;&#xD;&#xA;&#x9;}&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;for(int index = 0; index&lt;6; index++){&#xD;&#xA;&#x9;&#x9;if(index&lt;2)&#xD;&#xA;&#x9;&#x9;&#x9;listWork = listResult_YZ;&#xD;&#xA;&#x9;&#x9;else if(index&lt;4)&#xD;&#xA;&#x9;&#x9;&#x9;listWork = listResult_OE;&#xD;&#xA;&#x9;&#x9;else&#xD;&#xA;&#x9;&#x9;&#x9;listWork = listResult_FS;&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;if(listBet[index] &gt;= 0){&#xD;&#xA;&#x9;&#x9;&#x9;if(listLose[index] == true){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if((listBet[index] == 0 || listBet[index] == 2 || listBet[index] == 3) &amp;&amp; listWork[0] != listPattern[index]){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listBet[index] = -1;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentEarn += listPrevBetAmount[index] *2 + listPrevBetAmount[(index/2)*2 + (1-index%2)]*2;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Win on Lose Return To Delay&quot;);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;continue;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if((listBet[index] == 1 || listBet[index] == 4 || listBet[index] == 5) &amp;&amp; listWork[0] == listPattern[index]){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listBet[index] = -1;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentEarn += listPrevBetAmount[index] *2 + listPrevBetAmount[(index/2)*2 + (1-index%2)]*2;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Win on Lose Return To Delay&quot;);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;continue;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;nCurrentEarn -= listPrevBetAmount[index] *2 - listPrevBetAmount[(index/2)*2 + (1-index%2)]*2;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if(listPutChip[index] &gt;= (nGiveUp-1)){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(nGiveUp + &quot; Times Lose Return To Delay&quot;);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listBet[index] = -1;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;continue;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listPutChip[index]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listBet[index] = (listBet[index]+1) % 6;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if(listBet[index] == 0 || listBet[index] == 2 || listBet[index] == 3)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add((index/2)*2 + (1-index%2));&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;else&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add(index);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Lose on Lose Double Bet&quot; + &quot; : &quot; + listPattern[index] + &quot;-&quot; + listPattern[listPutPoint[listPutPoint.Count()-1]]);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;bBet = true;&#xD;&#xA;&#x9;&#x9;&#x9;} else {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if((listBet[index] == 0 || listBet[index] == 2 || listBet[index] == 3) &amp;&amp; listWork[0] == listPattern[index]){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Lose Double Bet&quot;);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = true;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentEarn -= listPrevBetAmount[index] *2 - listPrevBetAmount[(index/2)*2 + (1-index%2)]*2;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;} else if((listBet[index] == 1 || listBet[index] == 4 || listBet[index] == 5) &amp;&amp; listWork[0] != listPattern[index]){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Lose Double Bet&quot;);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = true;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentEarn -= listPrevBetAmount[index] *2 - listPrevBetAmount[(index/2)*2 + (1-index%2)]*2;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;else{&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentEarn += listPrevBetAmount[index] *2 + listPrevBetAmount[(index/2)*2 + (1-index%2)]*2;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;bBet = true;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listBet[index] = (listBet[index]+1) % 6;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if(listBet[index] == 0 || listBet[index] == 2 || listBet[index] == 3)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add((index/2)*2 + (1-index%2));&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;else&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add(index);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Bet&quot; + &quot; : &quot; + listPattern[index] + &quot;-&quot; + listPattern[listPutPoint[listPutPoint.Count()-1]]);&#xD;&#xA;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;}else{&#xD;&#xA;&#x9;&#x9;&#x9;bool bPattern = true;&#xD;&#xA;&#x9;&#x9;&#x9;for(int j=0; j&lt;nDelay; j++){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if(listWork[j] != listPattern[index]){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;bPattern = false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;break;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;if(bPattern){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;bBet = true;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listBet[index] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add((index/2) * 2 + (1-index%2));&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Pattern Detect Start Betting&quot; + &quot; : &quot; + listPattern[index] + &quot;-&quot; + listPattern[listPutPoint[listPutPoint.Count()-1]]);&#xD;&#xA;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;}&#xD;&#xA;&#x9;}&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;if(bBet == false){&#xD;&#xA;&#x9;&#x9;Console.WriteLine(&quot;Delay&quot;);&#xD;&#xA;&#x9;&#x9;listPutPoint.Add(0);&#xD;&#xA;&#x9;&#x9;listPutPoint.Add(1);&#xD;&#xA;&#x9;}&#x9;&#xD;&#xA;} catch (Exception e) {&#xD;&#xA;&#x9;Console.WriteLine(e.ToString());&#xD;&#xA;}&#xD;&#xA;" DisplayName="Determine" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeCode_2" Language="CSharp">
                       <ui:InvokeCode.Arguments>
-                        <InOutArgument x:TypeArguments="s:Int32[]" x:Key="listPutChip">[listPutChip]</InOutArgument>
-                        <InOutArgument x:TypeArguments="scg:List(x:Int32)" x:Key="listPutPoint">[listPutPoint]</InOutArgument>
-                        <InOutArgument x:TypeArguments="scg:List(x:String)" x:Key="listResult_YZ">[listResult_YZ]</InOutArgument>
-                        <InOutArgument x:TypeArguments="scg:List(x:String)" x:Key="listResult_OE">[listResult_OE]</InOutArgument>
-                        <InOutArgument x:TypeArguments="scg:List(x:String)" x:Key="listResult_FS">[listResult_FS]</InOutArgument>
-                        <InOutArgument x:TypeArguments="s:Boolean[]" x:Key="listLose">[listLose]</InOutArgument>
-                        <InOutArgument x:TypeArguments="s:Int32[]" x:Key="listBet">[listBet]</InOutArgument>
-                        <InArgument x:TypeArguments="s:String[]" x:Key="listPattern">[listPattern]</InArgument>
-                        <InArgument x:TypeArguments="x:Int32" x:Key="nDelay">[nDelay]</InArgument>
-                        <InOutArgument x:TypeArguments="x:Boolean" x:Key="bSkip">[bSkip]</InOutArgument>
-                        <InArgument x:TypeArguments="x:Int32" x:Key="nGiveUp">[nGiveUp]</InArgument>
-                        <InArgument x:TypeArguments="x:Double" x:Key="nStartUp">[rStartUp]</InArgument>
+                        <InOutArgument x:TypeArguments="s:Int32[]" x:Key="listPutChip">
+                          <mva:VisualBasicReference x:TypeArguments="s:Int32[]" ExpressionText="listPutChip" />
+                        </InOutArgument>
+                        <InOutArgument x:TypeArguments="scg:List(x:Int32)" x:Key="listPutPoint">
+                          <mva:VisualBasicReference x:TypeArguments="scg:List(x:Int32)" ExpressionText="listPutPoint" />
+                        </InOutArgument>
+                        <InOutArgument x:TypeArguments="scg:List(x:String)" x:Key="listResult_YZ">
+                          <mva:VisualBasicReference x:TypeArguments="scg:List(x:String)" ExpressionText="listResult_YZ" />
+                        </InOutArgument>
+                        <InOutArgument x:TypeArguments="scg:List(x:String)" x:Key="listResult_OE">
+                          <mva:VisualBasicReference x:TypeArguments="scg:List(x:String)" ExpressionText="listResult_OE" />
+                        </InOutArgument>
+                        <InOutArgument x:TypeArguments="scg:List(x:String)" x:Key="listResult_FS">
+                          <mva:VisualBasicReference x:TypeArguments="scg:List(x:String)" ExpressionText="listResult_FS" />
+                        </InOutArgument>
+                        <InOutArgument x:TypeArguments="s:Boolean[]" x:Key="listLose">
+                          <mva:VisualBasicReference x:TypeArguments="s:Boolean[]" ExpressionText="listLose" />
+                        </InOutArgument>
+                        <InOutArgument x:TypeArguments="s:Int32[]" x:Key="listBet">
+                          <mva:VisualBasicReference x:TypeArguments="s:Int32[]" ExpressionText="listBet" />
+                        </InOutArgument>
+                        <InArgument x:TypeArguments="s:String[]" x:Key="listPattern">
+                          <mva:VisualBasicValue x:TypeArguments="s:String[]" ExpressionText="listPattern" />
+                        </InArgument>
+                        <InArgument x:TypeArguments="x:Int32" x:Key="nDelay">
+                          <mva:VisualBasicValue x:TypeArguments="x:Int32" ExpressionText="nDelay" />
+                        </InArgument>
+                        <InOutArgument x:TypeArguments="x:Boolean" x:Key="bSkip">
+                          <mva:VisualBasicReference x:TypeArguments="x:Boolean" ExpressionText="bSkip" />
+                        </InOutArgument>
+                        <InArgument x:TypeArguments="x:Int32" x:Key="nGiveUp">
+                          <mva:VisualBasicValue x:TypeArguments="x:Int32" ExpressionText="nGiveUp" />
+                        </InArgument>
+                        <InArgument x:TypeArguments="x:Double" x:Key="nStartUp">
+                          <mva:VisualBasicValue x:TypeArguments="x:Double" ExpressionText="rStartUp" />
+                        </InArgument>
+                        <InOutArgument x:TypeArguments="x:Int32" x:Key="nCurrentEarn">
+                          <mva:VisualBasicReference x:TypeArguments="x:Int32" ExpressionText="nCurrentEarn" />
+                        </InOutArgument>
+                        <InArgument x:TypeArguments="s:Int32[]" x:Key="listPrevBetAmount">
+                          <mva:VisualBasicValue x:TypeArguments="s:Int32[]" ExpressionText="listPrevBetAmount" />
+                        </InArgument>
                       </ui:InvokeCode.Arguments>
                       <sap:WorkflowViewStateService.ViewState>
                         <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -227,10 +298,102 @@
                         </scg:Dictionary>
                       </sap:WorkflowViewStateService.ViewState>
                     </ui:InvokeCode>
+                    <FlowStep.Next>
+                      <FlowDecision x:Name="__ReferenceID1" DisplayName="Flow Decision" sap:VirtualizedContainerService.HintSize="79,87" sap2010:WorkflowViewState.IdRef="FlowDecision_5">
+                        <FlowDecision.Condition>
+                          <mva:VisualBasicValue x:TypeArguments="x:Boolean" ExpressionText="nCurrentEarn &gt;= nWinLimit" />
+                        </FlowDecision.Condition>
+                        <sap:WorkflowViewStateService.ViewState>
+                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                            <av:Point x:Key="ShapeLocation">260.641666666667,196.5</av:Point>
+                            <av:Size x:Key="ShapeSize">79,87</av:Size>
+                            <av:PointCollection x:Key="FalseConnector">339.641666666667,240 360,240 360,296.5 300,296.5 300,326.5</av:PointCollection>
+                            <av:PointCollection x:Key="TrueConnector">260.641666666667,240 230.641666666667,240 230.641666666667,184.5 120,184.5 120,214.5</av:PointCollection>
+                          </scg:Dictionary>
+                        </sap:WorkflowViewStateService.ViewState>
+                        <FlowDecision.True>
+                          <FlowStep x:Name="__ReferenceID3">
+                            <sap:WorkflowViewStateService.ViewState>
+                              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                <av:Point x:Key="ShapeLocation">20,214.5</av:Point>
+                                <av:Size x:Key="ShapeSize">200,51</av:Size>
+                                <av:PointCollection x:Key="ConnectorLocation">120,265.5 120,295.5 0,295.5 0,479 120,479 120,509</av:PointCollection>
+                              </scg:Dictionary>
+                            </sap:WorkflowViewStateService.ViewState>
+                            <ui:MessageBox Caption="{x:Null}" ChosenButton="{x:Null}" DisplayName="Message Box" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="MessageBox_1" Text="[&quot;You Have Earned $&quot; + Convert.ToString(nCurrentEarn/10) + &quot;. I Will Quit!!!&quot;]">
+                              <sap:WorkflowViewStateService.ViewState>
+                                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                </scg:Dictionary>
+                              </sap:WorkflowViewStateService.ViewState>
+                            </ui:MessageBox>
+                            <FlowStep.Next>
+                              <x:Reference>__ReferenceID0</x:Reference>
+                            </FlowStep.Next>
+                          </FlowStep>
+                        </FlowDecision.True>
+                        <FlowDecision.False>
+                          <FlowDecision x:Name="__ReferenceID2" DisplayName="Flow Decision" sap:VirtualizedContainerService.HintSize="79,87" sap2010:WorkflowViewState.IdRef="FlowDecision_6">
+                            <FlowDecision.Condition>
+                              <mva:VisualBasicValue x:TypeArguments="x:Boolean" ExpressionText="nCurrentEarn &lt;= nLoseLimit" />
+                            </FlowDecision.Condition>
+                            <sap:WorkflowViewStateService.ViewState>
+                              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                <av:Point x:Key="ShapeLocation">260.5,326.5</av:Point>
+                                <av:Size x:Key="ShapeSize">79,87</av:Size>
+                                <av:PointCollection x:Key="TrueConnector">260.5,370 230.5,370 230.5,324.5 120,324.5 120,354.5</av:PointCollection>
+                              </scg:Dictionary>
+                            </sap:WorkflowViewStateService.ViewState>
+                            <FlowDecision.True>
+                              <FlowStep x:Name="__ReferenceID4">
+                                <sap:WorkflowViewStateService.ViewState>
+                                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                    <av:Point x:Key="ShapeLocation">20,354.5</av:Point>
+                                    <av:Size x:Key="ShapeSize">200,51</av:Size>
+                                    <av:PointCollection x:Key="ConnectorLocation">120,405.5 120,509</av:PointCollection>
+                                  </scg:Dictionary>
+                                </sap:WorkflowViewStateService.ViewState>
+                                <ui:MessageBox Caption="{x:Null}" ChosenButton="{x:Null}" DisplayName="Message Box" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="MessageBox_2" Text="[&quot;You Have Lost $&quot; + Convert.ToString(Math.Abs(nCurrentEarn)/10) + &quot;. I Will Quit!!!&quot;]">
+                                  <sap:WorkflowViewStateService.ViewState>
+                                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                    </scg:Dictionary>
+                                  </sap:WorkflowViewStateService.ViewState>
+                                </ui:MessageBox>
+                                <FlowStep.Next>
+                                  <FlowStep x:Name="__ReferenceID0">
+                                    <sap:WorkflowViewStateService.ViewState>
+                                      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                        <av:Point x:Key="ShapeLocation">20,509</av:Point>
+                                        <av:Size x:Key="ShapeSize">200,22</av:Size>
+                                      </scg:Dictionary>
+                                    </sap:WorkflowViewStateService.ViewState>
+                                    <TerminateWorkflow DisplayName="Terminate Workflow" Exception="[new System.ApplicationException]" sap:VirtualizedContainerService.HintSize="200,22" sap2010:WorkflowViewState.IdRef="TerminateWorkflow_2" Reason="Bot Has Stopped By Quit Condition">
+                                      <sap:WorkflowViewStateService.ViewState>
+                                        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                        </scg:Dictionary>
+                                      </sap:WorkflowViewStateService.ViewState>
+                                    </TerminateWorkflow>
+                                  </FlowStep>
+                                </FlowStep.Next>
+                              </FlowStep>
+                            </FlowDecision.True>
+                          </FlowDecision>
+                        </FlowDecision.False>
+                      </FlowDecision>
+                    </FlowStep.Next>
                   </FlowStep>
+                  <x:Reference>__ReferenceID1</x:Reference>
+                  <x:Reference>__ReferenceID2</x:Reference>
+                  <x:Reference>__ReferenceID3</x:Reference>
+                  <x:Reference>__ReferenceID4</x:Reference>
+                  <x:Reference>__ReferenceID0</x:Reference>
                 </Flowchart>
                 <FlowStep.Next>
-                  <FlowStep x:Name="__ReferenceID19">
+                  <FlowStep x:Name="__ReferenceID26">
                     <sap:WorkflowViewStateService.ViewState>
                       <scg:Dictionary x:TypeArguments="x:String, x:Object">
                         <av:Point x:Key="ShapeLocation">230,244.5</av:Point>
@@ -252,7 +415,7 @@
                         </scg:Dictionary>
                       </sap:WorkflowViewStateService.ViewState>
                       <Flowchart.StartNode>
-                        <x:Reference>__ReferenceID11</x:Reference>
+                        <x:Reference>__ReferenceID18</x:Reference>
                       </Flowchart.StartNode>
                       <FlowStep>
                         <sap:WorkflowViewStateService.ViewState>
@@ -337,65 +500,61 @@
                           </sap:WorkflowViewStateService.ViewState>
                         </ui:ForEach>
                       </FlowStep>
-                      <FlowStep x:Name="__ReferenceID11">
+                      <FlowStep x:Name="__ReferenceID18">
                         <sap:WorkflowViewStateService.ViewState>
                           <scg:Dictionary x:TypeArguments="x:String, x:Object">
                             <av:Point x:Key="ShapeLocation">0,124.5</av:Point>
                             <av:Size x:Key="ShapeSize">200,51</av:Size>
                           </scg:Dictionary>
                         </sap:WorkflowViewStateService.ViewState>
-                        <Flowchart DisplayName="Put Coins" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="Flowchart_6">
+                        <Flowchart DisplayName="Put Coins" sap:VirtualizedContainerService.HintSize="634,636" sap2010:WorkflowViewState.IdRef="Flowchart_6">
                           <sap:WorkflowViewStateService.ViewState>
                             <scg:Dictionary x:TypeArguments="x:String, x:Object">
                               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                               <av:Point x:Key="ShapeLocation">270,2.5</av:Point>
                               <av:Size x:Key="ShapeSize">60,75</av:Size>
-                              <av:PointCollection x:Key="ConnectorLocation">300,77.5 300,124.5</av:PointCollection>
+                              <av:PointCollection x:Key="ConnectorLocation">300,77.5 300,114.5</av:PointCollection>
                             </scg:Dictionary>
                           </sap:WorkflowViewStateService.ViewState>
                           <Flowchart.StartNode>
-                            <x:Reference>__ReferenceID10</x:Reference>
+                            <x:Reference>__ReferenceID17</x:Reference>
                           </Flowchart.StartNode>
-                          <FlowDecision x:Name="__ReferenceID8" Condition="[indexPoint = listPutPoint.Count()]" DisplayName="Flow Decision" sap:VirtualizedContainerService.HintSize="79,87" sap2010:WorkflowViewState.IdRef="FlowDecision_1">
+                          <FlowDecision x:Name="__ReferenceID14" Condition="[indexPoint = listPutPoint.Count()]" DisplayName="Flow Decision" sap:VirtualizedContainerService.HintSize="79,87" sap2010:WorkflowViewState.IdRef="FlowDecision_1">
                             <sap:WorkflowViewStateService.ViewState>
                               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                                <av:Point x:Key="ShapeLocation">260.5,286.5</av:Point>
+                                <av:Point x:Key="ShapeLocation">260.5,346.5</av:Point>
                                 <av:Size x:Key="ShapeSize">79,87</av:Size>
-                                <av:PointCollection x:Key="FalseConnector">339.5,330 429.5,330 429.5,94.5 300,94.5 300,124.5</av:PointCollection>
+                                <av:PointCollection x:Key="FalseConnector">339.5,390 429.5,390 429.5,180 300,180 300,204.5</av:PointCollection>
                               </scg:Dictionary>
                             </sap:WorkflowViewStateService.ViewState>
                             <FlowDecision.False>
-                              <FlowStep x:Name="__ReferenceID10">
+                              <FlowStep x:Name="__ReferenceID16">
                                 <sap:WorkflowViewStateService.ViewState>
                                   <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                                    <av:Point x:Key="ShapeLocation">200,124.5</av:Point>
+                                    <av:Point x:Key="ShapeLocation">200,204.5</av:Point>
                                     <av:Size x:Key="ShapeSize">200,51</av:Size>
-                                    <av:PointCollection x:Key="ConnectorLocation">300,175.5 300,204.5</av:PointCollection>
+                                    <av:PointCollection x:Key="ConnectorLocation">300,255.5 300,264.5</av:PointCollection>
                                   </scg:Dictionary>
                                 </sap:WorkflowViewStateService.ViewState>
                                 <Flowchart DisplayName="Put Chips" sap:VirtualizedContainerService.HintSize="674,636" sap2010:WorkflowViewState.IdRef="Flowchart_7">
                                   <Flowchart.Variables>
-                                    <Variable x:TypeArguments="x:Int32" Name="nBetAmount">
-                                      <Variable.Default>
-                                        <mva:VisualBasicValue x:TypeArguments="x:Int32" ExpressionText="If ((listBet(listPutPoint(indexPoint)) &gt;= 0) Or (listBet((listPutPoint(indexPoint)\2)*2 + (1-(listPutPoint(indexPoint) Mod 2))) &gt;= 0), nStartUp*CInt(2 ^ listPutChip(listPutPoint(indexPoint))) , 1)" />
-                                      </Variable.Default>
-                                    </Variable>
+                                    <Variable x:TypeArguments="x:Int32" Default="[If ((listBet(listPutPoint(indexPoint)) &gt;= 0) Or (listBet((listPutPoint(indexPoint)\2)*2 + (1-(listPutPoint(indexPoint) Mod 2))) &gt;= 0), nStartUp*CInt(2 ^ listPutChip(listPutPoint(indexPoint))) , 1)]" Name="nBetAmount" />
                                     <Variable x:TypeArguments="x:Int32" Default="8" Name="nBetIndex" />
                                   </Flowchart.Variables>
                                   <sap:WorkflowViewStateService.ViewState>
                                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                       <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                                      <av:Point x:Key="ShapeLocation">270,2.5</av:Point>
+                                      <av:Point x:Key="ShapeLocation">270,0</av:Point>
                                       <av:Size x:Key="ShapeSize">60,75</av:Size>
-                                      <av:PointCollection x:Key="ConnectorLocation">300,77.5 300,106.5</av:PointCollection>
+                                      <av:PointCollection x:Key="ConnectorLocation">300,75 300,105 230.5,105 230.5,75 120,75 120,104.02</av:PointCollection>
                                       <x:Double x:Key="Width">640</x:Double>
                                     </scg:Dictionary>
                                   </sap:WorkflowViewStateService.ViewState>
                                   <Flowchart.StartNode>
-                                    <x:Reference>__ReferenceID4</x:Reference>
+                                    <x:Reference>__ReferenceID13</x:Reference>
                                   </Flowchart.StartNode>
-                                  <FlowStep x:Name="__ReferenceID1">
+                                  <FlowStep x:Name="__ReferenceID7">
                                     <sap:WorkflowViewStateService.ViewState>
                                       <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                         <av:Point x:Key="ShapeLocation">200,324.5</av:Point>
@@ -431,7 +590,7 @@
                                       </sap:WorkflowViewStateService.ViewState>
                                     </ui:Click>
                                     <FlowStep.Next>
-                                      <FlowStep x:Name="__ReferenceID5">
+                                      <FlowStep x:Name="__ReferenceID10">
                                         <sap:WorkflowViewStateService.ViewState>
                                           <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                             <av:Point x:Key="ShapeLocation">200,404.5</av:Point>
@@ -439,17 +598,11 @@
                                             <av:PointCollection x:Key="ConnectorLocation">300,455.5 300,466.5</av:PointCollection>
                                           </scg:Dictionary>
                                         </sap:WorkflowViewStateService.ViewState>
-                                        <ui:InvokeCode ContinueOnError="{x:Null}" Code="nBetAmount = nBetAmount - listChipValue(nBetIndex)&#xD;&#xA;" DisplayName="Minus Put Amount" sap:VirtualizedContainerService.HintSize="334,164" sap2010:WorkflowViewState.IdRef="InvokeCode_4">
+                                        <ui:InvokeCode ContinueOnError="{x:Null}" Code="nBetAmount = nBetAmount - listChipValue(nBetIndex)&#xA;" DisplayName="Minus Put Amount" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeCode_4">
                                           <ui:InvokeCode.Arguments>
-                                            <InOutArgument x:TypeArguments="x:Int32" x:Key="nBetAmount">
-                                              <mva:VisualBasicReference x:TypeArguments="x:Int32" ExpressionText="nBetAmount" />
-                                            </InOutArgument>
-                                            <InArgument x:TypeArguments="x:Int32" x:Key="nBetIndex">
-                                              <mva:VisualBasicValue x:TypeArguments="x:Int32" ExpressionText="nBetIndex" />
-                                            </InArgument>
-                                            <InArgument x:TypeArguments="s:Int32[]" x:Key="listChipValue">
-                                              <mva:VisualBasicValue x:TypeArguments="s:Int32[]" ExpressionText="listChipValue" />
-                                            </InArgument>
+                                            <InOutArgument x:TypeArguments="x:Int32" x:Key="nBetAmount">[nBetAmount]</InOutArgument>
+                                            <InArgument x:TypeArguments="x:Int32" x:Key="nBetIndex">[nBetIndex]</InArgument>
+                                            <InArgument x:TypeArguments="s:Int32[]" x:Key="listChipValue">[listChipValue]</InArgument>
                                           </ui:InvokeCode.Arguments>
                                           <sap:WorkflowViewStateService.ViewState>
                                             <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -458,7 +611,7 @@
                                           </sap:WorkflowViewStateService.ViewState>
                                         </ui:InvokeCode>
                                         <FlowStep.Next>
-                                          <FlowDecision x:Name="__ReferenceID6" Condition="[nBetAmount &gt;= listChipValue(nBetIndex)]" DisplayName="Flow Decision" sap:VirtualizedContainerService.HintSize="79,87" sap2010:WorkflowViewState.IdRef="FlowDecision_3" True="{x:Reference __ReferenceID1}">
+                                          <FlowDecision x:Name="__ReferenceID11" Condition="[nBetAmount &gt;= listChipValue(nBetIndex)]" DisplayName="Flow Decision" sap:VirtualizedContainerService.HintSize="79,87" sap2010:WorkflowViewState.IdRef="FlowDecision_3" True="{x:Reference __ReferenceID7}">
                                             <sap:WorkflowViewStateService.ViewState>
                                               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -469,7 +622,7 @@
                                               </scg:Dictionary>
                                             </sap:WorkflowViewStateService.ViewState>
                                             <FlowDecision.False>
-                                              <FlowDecision x:Name="__ReferenceID2" Condition="[nBetIndex &gt; 0]" DisplayName="Flow Decision" sap:VirtualizedContainerService.HintSize="79,87" sap2010:WorkflowViewState.IdRef="FlowDecision_4">
+                                              <FlowDecision x:Name="__ReferenceID6" Condition="[nBetIndex &gt; 0]" DisplayName="Flow Decision" sap:VirtualizedContainerService.HintSize="79,87" sap2010:WorkflowViewState.IdRef="FlowDecision_4">
                                                 <sap:WorkflowViewStateService.ViewState>
                                                   <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                                     <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -479,15 +632,15 @@
                                                   </scg:Dictionary>
                                                 </sap:WorkflowViewStateService.ViewState>
                                                 <FlowDecision.True>
-                                                  <FlowStep x:Name="__ReferenceID7">
+                                                  <FlowStep x:Name="__ReferenceID12">
                                                     <sap:WorkflowViewStateService.ViewState>
                                                       <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                                         <av:Point x:Key="ShapeLocation">440,224.5</av:Point>
                                                         <av:Size x:Key="ShapeSize">200,51</av:Size>
-                                                        <av:PointCollection x:Key="ConnectorLocation">540,275.5 540,305.5 410,305.5 410,95.5 300,95.5 300,106.5</av:PointCollection>
+                                                        <av:PointCollection x:Key="ConnectorLocation">540,275.5 540,305.5 410,305.5 410,96.5 300,96.5 300,126.5</av:PointCollection>
                                                       </scg:Dictionary>
                                                     </sap:WorkflowViewStateService.ViewState>
-                                                    <ui:InvokeCode ContinueOnError="{x:Null}" Code="nBetIndex = nBetIndex - 1" DisplayName="Decrease Put Amount" sap:VirtualizedContainerService.HintSize="334,164" sap2010:WorkflowViewState.IdRef="InvokeCode_5">
+                                                    <ui:InvokeCode ContinueOnError="{x:Null}" Code="nBetIndex = nBetIndex - 1" DisplayName="Decrease Put Amount" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeCode_5">
                                                       <ui:InvokeCode.Arguments>
                                                         <InOutArgument x:TypeArguments="x:Int32" x:Key="nBetIndex">[nBetIndex]</InOutArgument>
                                                       </ui:InvokeCode.Arguments>
@@ -498,18 +651,18 @@
                                                       </sap:WorkflowViewStateService.ViewState>
                                                     </ui:InvokeCode>
                                                     <FlowStep.Next>
-                                                      <FlowDecision x:Name="__ReferenceID4" Condition="[nBetAmount &gt;= listChipValue(nBetIndex)]" DisplayName="Flow Decision" sap:VirtualizedContainerService.HintSize="79,87" sap2010:WorkflowViewState.IdRef="FlowDecision_2">
+                                                      <FlowDecision x:Name="__ReferenceID9" Condition="[nBetAmount &gt;= listChipValue(nBetIndex)]" DisplayName="Flow Decision" sap:VirtualizedContainerService.HintSize="79,87" sap2010:WorkflowViewState.IdRef="FlowDecision_2">
                                                         <sap:WorkflowViewStateService.ViewState>
                                                           <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                                             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                                                            <av:Point x:Key="ShapeLocation">260.5,106.5</av:Point>
+                                                            <av:Point x:Key="ShapeLocation">260.5,126.5</av:Point>
                                                             <av:Size x:Key="ShapeSize">79,87</av:Size>
-                                                            <av:PointCollection x:Key="TrueConnector">260.5,150 240,150 240,204.5 300,204.5 300,234.5</av:PointCollection>
-                                                            <av:PointCollection x:Key="FalseConnector">339.5,150 369.5,150 369.5,66.5 510,66.5 510,96.5</av:PointCollection>
+                                                            <av:PointCollection x:Key="TrueConnector">260.5,170 260.5,234.5 300,234.5</av:PointCollection>
+                                                            <av:PointCollection x:Key="FalseConnector">339.5,170 369.5,170 369.5,66.5 510,66.5 510,96.5</av:PointCollection>
                                                           </scg:Dictionary>
                                                         </sap:WorkflowViewStateService.ViewState>
                                                         <FlowDecision.True>
-                                                          <FlowStep x:Name="__ReferenceID3">
+                                                          <FlowStep x:Name="__ReferenceID8">
                                                             <sap:WorkflowViewStateService.ViewState>
                                                               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                                                 <av:Point x:Key="ShapeLocation">200,234.5</av:Point>
@@ -545,12 +698,12 @@
                                                               </sap:WorkflowViewStateService.ViewState>
                                                             </ui:Click>
                                                             <FlowStep.Next>
-                                                              <x:Reference>__ReferenceID1</x:Reference>
+                                                              <x:Reference>__ReferenceID7</x:Reference>
                                                             </FlowStep.Next>
                                                           </FlowStep>
                                                         </FlowDecision.True>
                                                         <FlowDecision.False>
-                                                          <x:Reference>__ReferenceID2</x:Reference>
+                                                          <x:Reference>__ReferenceID6</x:Reference>
                                                         </FlowDecision.False>
                                                       </FlowDecision>
                                                     </FlowStep.Next>
@@ -563,20 +716,53 @@
                                       </FlowStep>
                                     </FlowStep.Next>
                                   </FlowStep>
-                                  <x:Reference>__ReferenceID3</x:Reference>
-                                  <x:Reference>__ReferenceID4</x:Reference>
-                                  <x:Reference>__ReferenceID5</x:Reference>
+                                  <x:Reference>__ReferenceID8</x:Reference>
+                                  <x:Reference>__ReferenceID9</x:Reference>
+                                  <x:Reference>__ReferenceID10</x:Reference>
+                                  <x:Reference>__ReferenceID11</x:Reference>
                                   <x:Reference>__ReferenceID6</x:Reference>
-                                  <x:Reference>__ReferenceID2</x:Reference>
-                                  <x:Reference>__ReferenceID7</x:Reference>
-                                </Flowchart>
-                                <FlowStep.Next>
-                                  <FlowStep x:Name="__ReferenceID9">
+                                  <x:Reference>__ReferenceID12</x:Reference>
+                                  <FlowStep x:Name="__ReferenceID13">
                                     <sap:WorkflowViewStateService.ViewState>
                                       <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                                        <av:Point x:Key="ShapeLocation">200,204.5</av:Point>
+                                        <av:Point x:Key="ShapeLocation">20,104.02</av:Point>
                                         <av:Size x:Key="ShapeSize">200,51</av:Size>
-                                        <av:PointCollection x:Key="ConnectorLocation">300,255.5 300,286.5</av:PointCollection>
+                                        <av:PointCollection x:Key="ConnectorLocation">120,155.02 120,185.02 0,185.02 0,96.5 300,96.5 300,126.5</av:PointCollection>
+                                      </scg:Dictionary>
+                                    </sap:WorkflowViewStateService.ViewState>
+                                    <ui:InvokeCode ContinueOnError="{x:Null}" Code="listPrevBetAmount[listPutPoint[indexPoint]] = nBetAmount;" DisplayName="Set Bet Amount" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeCode_8" Language="CSharp">
+                                      <ui:InvokeCode.Arguments>
+                                        <InArgument x:TypeArguments="x:Int32" x:Key="nBetAmount">
+                                          <mva:VisualBasicValue x:TypeArguments="x:Int32" ExpressionText="nBetAmount" />
+                                        </InArgument>
+                                        <InOutArgument x:TypeArguments="s:Int32[]" x:Key="listPrevBetAmount">
+                                          <mva:VisualBasicReference x:TypeArguments="s:Int32[]" ExpressionText="listPrevBetAmount" />
+                                        </InOutArgument>
+                                        <InArgument x:TypeArguments="scg:List(x:Int32)" x:Key="listPutPoint">
+                                          <mva:VisualBasicValue x:TypeArguments="scg:List(x:Int32)" ExpressionText="listPutPoint" />
+                                        </InArgument>
+                                        <InArgument x:TypeArguments="x:Int32" x:Key="indexPoint">
+                                          <mva:VisualBasicValue x:TypeArguments="x:Int32" ExpressionText="indexPoint" />
+                                        </InArgument>
+                                      </ui:InvokeCode.Arguments>
+                                      <sap:WorkflowViewStateService.ViewState>
+                                        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                        </scg:Dictionary>
+                                      </sap:WorkflowViewStateService.ViewState>
+                                    </ui:InvokeCode>
+                                    <FlowStep.Next>
+                                      <x:Reference>__ReferenceID9</x:Reference>
+                                    </FlowStep.Next>
+                                  </FlowStep>
+                                </Flowchart>
+                                <FlowStep.Next>
+                                  <FlowStep x:Name="__ReferenceID15">
+                                    <sap:WorkflowViewStateService.ViewState>
+                                      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                        <av:Point x:Key="ShapeLocation">200,264.5</av:Point>
+                                        <av:Size x:Key="ShapeSize">200,51</av:Size>
+                                        <av:PointCollection x:Key="ConnectorLocation">300,315.5 300,346.5</av:PointCollection>
                                       </scg:Dictionary>
                                     </sap:WorkflowViewStateService.ViewState>
                                     <ui:InvokeCode ContinueOnError="{x:Null}" Code="indexPoint++;" DisplayName="Increase indexPoint" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeCode_3" Language="CSharp">
@@ -590,20 +776,47 @@
                                       </sap:WorkflowViewStateService.ViewState>
                                     </ui:InvokeCode>
                                     <FlowStep.Next>
-                                      <x:Reference>__ReferenceID8</x:Reference>
+                                      <x:Reference>__ReferenceID14</x:Reference>
                                     </FlowStep.Next>
                                   </FlowStep>
                                 </FlowStep.Next>
                               </FlowStep>
                             </FlowDecision.False>
                           </FlowDecision>
-                          <x:Reference>__ReferenceID9</x:Reference>
-                          <x:Reference>__ReferenceID10</x:Reference>
+                          <x:Reference>__ReferenceID15</x:Reference>
+                          <x:Reference>__ReferenceID16</x:Reference>
+                          <FlowStep x:Name="__ReferenceID17">
+                            <sap:WorkflowViewStateService.ViewState>
+                              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                <av:Point x:Key="ShapeLocation">200,114.5</av:Point>
+                                <av:Size x:Key="ShapeSize">200,51</av:Size>
+                                <av:PointCollection x:Key="ConnectorLocation">300,165.5 300,204.5</av:PointCollection>
+                              </scg:Dictionary>
+                            </sap:WorkflowViewStateService.ViewState>
+                            <ui:InvokeCode ContinueOnError="{x:Null}" Code="for(int i=0; i&lt;listBet.Length; i++)&#xD;&#xA;{&#xD;&#xA;&#x9;listPrevBetAmount[i] = 0;&#xD;&#xA;}" DisplayName="InitBetAmount" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeCode_7" Language="CSharp">
+                              <ui:InvokeCode.Arguments>
+                                <InOutArgument x:TypeArguments="s:Int32[]" x:Key="listPrevBetAmount">
+                                  <mva:VisualBasicReference x:TypeArguments="s:Int32[]" ExpressionText="listPrevBetAmount" />
+                                </InOutArgument>
+                                <InArgument x:TypeArguments="s:Int32[]" x:Key="listBet">
+                                  <mva:VisualBasicValue x:TypeArguments="s:Int32[]" ExpressionText="listBet" />
+                                </InArgument>
+                              </ui:InvokeCode.Arguments>
+                              <sap:WorkflowViewStateService.ViewState>
+                                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                </scg:Dictionary>
+                              </sap:WorkflowViewStateService.ViewState>
+                            </ui:InvokeCode>
+                            <FlowStep.Next>
+                              <x:Reference>__ReferenceID16</x:Reference>
+                            </FlowStep.Next>
+                          </FlowStep>
                         </Flowchart>
                       </FlowStep>
                     </Flowchart>
                     <FlowStep.Next>
-                      <FlowStep x:Name="__ReferenceID20">
+                      <FlowStep x:Name="__ReferenceID27">
                         <sap:WorkflowViewStateService.ViewState>
                           <scg:Dictionary x:TypeArguments="x:String, x:Object">
                             <av:Point x:Key="ShapeLocation">230,334.5</av:Point>
@@ -622,9 +835,9 @@
                             </scg:Dictionary>
                           </sap:WorkflowViewStateService.ViewState>
                           <Flowchart.StartNode>
-                            <x:Reference>__ReferenceID17</x:Reference>
+                            <x:Reference>__ReferenceID24</x:Reference>
                           </Flowchart.StartNode>
-                          <FlowStep x:Name="__ReferenceID12">
+                          <FlowStep x:Name="__ReferenceID19">
                             <sap:WorkflowViewStateService.ViewState>
                               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                 <av:Point x:Key="ShapeLocation">200,474.5</av:Point>
@@ -649,7 +862,7 @@
                               </sap:WorkflowViewStateService.ViewState>
                             </ui:InvokeCode>
                           </FlowStep>
-                          <FlowStep x:Name="__ReferenceID14">
+                          <FlowStep x:Name="__ReferenceID21">
                             <sap:WorkflowViewStateService.ViewState>
                               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                 <av:Point x:Key="ShapeLocation">200,194.5</av:Point>
@@ -685,7 +898,7 @@
                               </sap:WorkflowViewStateService.ViewState>
                             </ui:Click>
                             <FlowStep.Next>
-                              <FlowStep x:Name="__ReferenceID16">
+                              <FlowStep x:Name="__ReferenceID23">
                                 <sap:WorkflowViewStateService.ViewState>
                                   <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                     <av:Point x:Key="ShapeLocation">200,264.5</av:Point>
@@ -711,7 +924,7 @@
                                   </sap:WorkflowViewStateService.ViewState>
                                 </ui:GetAttribute>
                                 <FlowStep.Next>
-                                  <FlowStep x:Name="__ReferenceID15">
+                                  <FlowStep x:Name="__ReferenceID22">
                                     <sap:WorkflowViewStateService.ViewState>
                                       <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                         <av:Point x:Key="ShapeLocation">200,334.5</av:Point>
@@ -757,7 +970,7 @@
                                       </sap:WorkflowViewStateService.ViewState>
                                     </ui:InterruptibleWhile>
                                     <FlowStep.Next>
-                                      <FlowStep x:Name="__ReferenceID13">
+                                      <FlowStep x:Name="__ReferenceID20">
                                         <sap:WorkflowViewStateService.ViewState>
                                           <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                             <av:Point x:Key="ShapeLocation">200,404.5</av:Point>
@@ -786,7 +999,7 @@
                                           </sap:WorkflowViewStateService.ViewState>
                                         </ui:GetValue>
                                         <FlowStep.Next>
-                                          <x:Reference>__ReferenceID12</x:Reference>
+                                          <x:Reference>__ReferenceID19</x:Reference>
                                         </FlowStep.Next>
                                       </FlowStep>
                                     </FlowStep.Next>
@@ -795,8 +1008,8 @@
                               </FlowStep>
                             </FlowStep.Next>
                           </FlowStep>
-                          <x:Reference>__ReferenceID13</x:Reference>
-                          <FlowStep x:Name="__ReferenceID17">
+                          <x:Reference>__ReferenceID20</x:Reference>
+                          <FlowStep x:Name="__ReferenceID24">
                             <sap:WorkflowViewStateService.ViewState>
                               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                 <av:Point x:Key="ShapeLocation">200,114.5</av:Point>
@@ -818,22 +1031,22 @@
                               </sap:WorkflowViewStateService.ViewState>
                             </ui:GetAttribute>
                             <FlowStep.Next>
-                              <x:Reference>__ReferenceID14</x:Reference>
+                              <x:Reference>__ReferenceID21</x:Reference>
                             </FlowStep.Next>
                           </FlowStep>
-                          <x:Reference>__ReferenceID15</x:Reference>
-                          <x:Reference>__ReferenceID16</x:Reference>
+                          <x:Reference>__ReferenceID22</x:Reference>
+                          <x:Reference>__ReferenceID23</x:Reference>
                         </Flowchart>
                         <FlowStep.Next>
-                          <x:Reference>__ReferenceID18</x:Reference>
+                          <x:Reference>__ReferenceID25</x:Reference>
                         </FlowStep.Next>
                       </FlowStep>
                     </FlowStep.Next>
                   </FlowStep>
                 </FlowStep.Next>
               </FlowStep>
-              <x:Reference>__ReferenceID19</x:Reference>
-              <x:Reference>__ReferenceID20</x:Reference>
+              <x:Reference>__ReferenceID26</x:Reference>
+              <x:Reference>__ReferenceID27</x:Reference>
             </Flowchart>
           </Sequence>
         </ActivityAction>
