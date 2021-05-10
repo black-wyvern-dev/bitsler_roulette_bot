@@ -1,4 +1,4 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="Main" mva:VisualBasic.Settings="{x:Null}" sap:VirtualizedContainerService.HintSize="599,2057" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="Main" mva:VisualBasic.Settings="{x:Null}" sap:VirtualizedContainerService.HintSize="555,2613" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
       <x:String>System.Activities</x:String>
@@ -81,34 +81,43 @@
       <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Bot" sap:VirtualizedContainerService.HintSize="509,1992" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Bot" sap:VirtualizedContainerService.HintSize="509,2548" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
-      <Variable x:TypeArguments="x:Int32" Default="5" Name="nDelay" />
+      <Variable x:TypeArguments="x:Int32" Name="nDelay1">
+        <Variable.Default>
+          <Literal x:TypeArguments="x:Int32" Value="6" />
+        </Variable.Default>
+      </Variable>
       <Variable x:TypeArguments="x:Int32" Default="6" Name="nGiveUp" />
       <Variable x:TypeArguments="x:Double" Default="0.1" Name="rStartUp" />
       <Variable x:TypeArguments="x:Int32" Default="1" Name="nStartUp" />
-      <Variable x:TypeArguments="s:Int32[]" Name="listPrevBetAmount">
-        <Variable.Default>
-          <mva:VisualBasicValue x:TypeArguments="s:Int32[]" ExpressionText="{}{0,0,0,0,0,0}" />
-        </Variable.Default>
-      </Variable>
+      <Variable x:TypeArguments="s:Int32[]" Default="[{0,0,0,0,0,0}]" Name="listPrevBetAmount" />
       <Variable x:TypeArguments="x:Double" Default="40" Name="rLoseLimit" />
-      <Variable x:TypeArguments="x:Int32" Name="nLoseLimit">
+      <Variable x:TypeArguments="x:Int32" Default="400" Name="nLoseLimit" />
+      <Variable x:TypeArguments="x:Double" Default="40" Name="rWinLimit" />
+      <Variable x:TypeArguments="x:Int32" Default="400" Name="nWinLimit" />
+      <Variable x:TypeArguments="x:Int32" Default="0" Name="nCurrentEarn" />
+      <Variable x:TypeArguments="x:Int32" Name="nVersion">
         <Variable.Default>
-          <Literal x:TypeArguments="x:Int32" Value="400" />
+          <Literal x:TypeArguments="x:Int32" Value="3" />
         </Variable.Default>
       </Variable>
-      <Variable x:TypeArguments="x:Double" Name="rWinLimit">
+      <Variable x:TypeArguments="x:Int32" Name="nDelay2">
         <Variable.Default>
-          <Literal x:TypeArguments="x:Double" Value="40" />
+          <Literal x:TypeArguments="x:Int32" Value="4" />
         </Variable.Default>
       </Variable>
-      <Variable x:TypeArguments="x:Int32" Name="nWinLimit">
+      <Variable x:TypeArguments="x:Int32" Name="nDelayConvert">
         <Variable.Default>
-          <Literal x:TypeArguments="x:Int32" Value="400" />
+          <Literal x:TypeArguments="x:Int32" Value="15" />
         </Variable.Default>
       </Variable>
-      <Variable x:TypeArguments="x:Int32" Name="nCurrentEarn">
+      <Variable x:TypeArguments="x:Int32" Name="nCurrentDelay">
+        <Variable.Default>
+          <Literal x:TypeArguments="x:Int32" />
+        </Variable.Default>
+      </Variable>
+      <Variable x:TypeArguments="x:Int32" Name="nCurrentDelayPos">
         <Variable.Default>
           <Literal x:TypeArguments="x:Int32" />
         </Variable.Default>
@@ -119,9 +128,19 @@
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Settings" sap:VirtualizedContainerService.HintSize="467,238" sap2010:WorkflowViewState.IdRef="InputDialog_1" IsPassword="False" Label="Delay Count" Title="Bot Setting">
+    <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Settings" sap:VirtualizedContainerService.HintSize="467,238" sap2010:WorkflowViewState.IdRef="InputDialog_1" IsPassword="False" Label="Delay Count 1" Title="Bot Setting">
       <ui:InputDialog.Result>
-        <OutArgument x:TypeArguments="x:Int32">[nDelay]</OutArgument>
+        <OutArgument x:TypeArguments="x:Int32">[nDelay1]</OutArgument>
+      </ui:InputDialog.Result>
+    </ui:InputDialog>
+    <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Settings" sap:VirtualizedContainerService.HintSize="467,238" sap2010:WorkflowViewState.IdRef="InputDialog_6" IsPassword="False" Label="Delay Count 2" Title="Bot Setting">
+      <ui:InputDialog.Result>
+        <OutArgument x:TypeArguments="x:Int32">[nDelay2]</OutArgument>
+      </ui:InputDialog.Result>
+    </ui:InputDialog>
+    <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Settings" sap:VirtualizedContainerService.HintSize="467,238" sap2010:WorkflowViewState.IdRef="InputDialog_7" IsPassword="False" Label="Delay Convert Count" Title="Bot Setting">
+      <ui:InputDialog.Result>
+        <OutArgument x:TypeArguments="x:Int32">[nDelayConvert]</OutArgument>
       </ui:InputDialog.Result>
     </ui:InputDialog>
     <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Settings" sap:VirtualizedContainerService.HintSize="467,238" sap2010:WorkflowViewState.IdRef="InputDialog_2" IsPassword="False" Label="Give Up Limit" Title="Bot Setting">
@@ -144,26 +163,14 @@
         <OutArgument x:TypeArguments="x:Double">[rLoseLimit]</OutArgument>
       </ui:InputDialog.Result>
     </ui:InputDialog>
-    <ui:InvokeCode ContinueOnError="{x:Null}" Code="nStartUp = CInt(rStartUp*10)&#xD;&#xA;nWinLimit = CInt(rWinLimit*10)&#xD;&#xA;nLoseLimit= CInt(rLoseLimit*10)" DisplayName="Invoke code" sap:VirtualizedContainerService.HintSize="467,164" sap2010:WorkflowViewState.IdRef="InvokeCode_6">
+    <ui:InvokeCode ContinueOnError="{x:Null}" Code="nStartUp = CInt(rStartUp*10)&#xA;nWinLimit = CInt(rWinLimit*10)&#xA;nLoseLimit= CInt(rLoseLimit*10)" DisplayName="Invoke code" sap:VirtualizedContainerService.HintSize="467,164" sap2010:WorkflowViewState.IdRef="InvokeCode_6">
       <ui:InvokeCode.Arguments>
-        <InArgument x:TypeArguments="x:Double" x:Key="rStartUp">
-          <mva:VisualBasicValue x:TypeArguments="x:Double" ExpressionText="rStartUp" />
-        </InArgument>
-        <InOutArgument x:TypeArguments="x:Int32" x:Key="nStartUp">
-          <mva:VisualBasicReference x:TypeArguments="x:Int32" ExpressionText="nStartUp" />
-        </InOutArgument>
-        <InArgument x:TypeArguments="x:Double" x:Key="rWinLimit">
-          <mva:VisualBasicValue x:TypeArguments="x:Double" ExpressionText="rWinLimit" />
-        </InArgument>
-        <InOutArgument x:TypeArguments="x:Int32" x:Key="nWinLimit">
-          <mva:VisualBasicReference x:TypeArguments="x:Int32" ExpressionText="nWinLimit" />
-        </InOutArgument>
-        <InArgument x:TypeArguments="x:Double" x:Key="rLoseLimit">
-          <mva:VisualBasicValue x:TypeArguments="x:Double" ExpressionText="rLoseLimit" />
-        </InArgument>
-        <InOutArgument x:TypeArguments="x:Int32" x:Key="nLoseLimit">
-          <mva:VisualBasicReference x:TypeArguments="x:Int32" ExpressionText="nLoseLimit" />
-        </InOutArgument>
+        <InArgument x:TypeArguments="x:Double" x:Key="rStartUp">[rStartUp]</InArgument>
+        <InOutArgument x:TypeArguments="x:Int32" x:Key="nStartUp">[nStartUp]</InOutArgument>
+        <InArgument x:TypeArguments="x:Double" x:Key="rWinLimit">[rWinLimit]</InArgument>
+        <InOutArgument x:TypeArguments="x:Int32" x:Key="nWinLimit">[nWinLimit]</InOutArgument>
+        <InArgument x:TypeArguments="x:Double" x:Key="rLoseLimit">[rLoseLimit]</InArgument>
+        <InOutArgument x:TypeArguments="x:Int32" x:Key="nLoseLimit">[nLoseLimit]</InOutArgument>
       </ui:InvokeCode.Arguments>
     </ui:InvokeCode>
     <ui:OpenBrowser CommunicationMethod="{x:Null}" Hidden="{x:Null}" NewSession="{x:Null}" Private="{x:Null}" UiBrowser="{x:Null}" BrowserType="Chrome" DisplayName="Open Browser" sap:VirtualizedContainerService.HintSize="467,306" sap2010:WorkflowViewState.IdRef="OpenBrowser_1" Url="https://www.bitsler.com/en/roulette">
@@ -247,7 +254,7 @@
                         <av:PointCollection x:Key="ConnectorLocation">300,165.5 300,195.5 300.141666666667,195.5 300.141666666667,196.5</av:PointCollection>
                       </scg:Dictionary>
                     </sap:WorkflowViewStateService.ViewState>
-                    <ui:InvokeCode ContinueOnError="{x:Null}" Code="try{&#xD;&#xA;&#x9;if(bSkip){&#xD;&#xA;&#x9;&#x9;Console.WriteLine(&quot;Skip Turn&quot;);&#xD;&#xA;&#x9;&#x9;for(int i=0; i&lt;listPattern.Length; i++)&#xD;&#xA;&#x9;&#x9;&#x9;nCurrentEarn -= listPrevBetAmount[i];&#xD;&#xA;&#x9;&#x9;for(int i=0; i&lt;6; i++){&#xD;&#xA;&#x9;&#x9;&#x9;if(listBet[i]&gt;=0)&#xD;&#xA;&#x9;&#x9;&#x9;{&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listPutChip[i]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listPutChip[(i/2)*2 + (1-i%2)]++;&#xD;&#xA;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;bSkip = false;&#xD;&#xA;&#x9;&#x9;return;&#xD;&#xA;&#x9;}&#xD;&#xA;&#x9;listPutPoint.Clear();&#xD;&#xA;&#xD;&#xA;&#x9;Console.WriteLine(&quot;-----------------&quot;);&#xD;&#xA;&#x9;bool bBet = false;&#xD;&#xA;&#x9;List&lt;String&gt; listWork;&#xD;&#xA;&#x9;if(listResult_YZ.Count()&lt;nDelay){&#xD;&#xA;&#x9;&#x9;Console.WriteLine(&quot;&lt;Delay&quot;);&#xD;&#xA;&#x9;&#x9;listPutPoint.Add(0);&#xD;&#xA;&#x9;&#x9;listPutPoint.Add(1);&#xD;&#xA;&#x9;&#x9;return;&#xD;&#xA;&#x9;}&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;for(int index = 0; index&lt;6; index++){&#xD;&#xA;&#x9;&#x9;if(index&lt;2)&#xD;&#xA;&#x9;&#x9;&#x9;listWork = listResult_YZ;&#xD;&#xA;&#x9;&#x9;else if(index&lt;4)&#xD;&#xA;&#x9;&#x9;&#x9;listWork = listResult_OE;&#xD;&#xA;&#x9;&#x9;else&#xD;&#xA;&#x9;&#x9;&#x9;listWork = listResult_FS;&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;if(listBet[index] &gt;= 0){&#xD;&#xA;&#x9;&#x9;&#x9;if(listLose[index] == true){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if((listBet[index] == 0 || listBet[index] == 2 || listBet[index] == 3) &amp;&amp; listWork[0] != listPattern[index]){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listBet[index] = -1;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentEarn += listPrevBetAmount[index] *2 + listPrevBetAmount[(index/2)*2 + (1-index%2)]*2;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Win on Lose Return To Delay&quot;);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;continue;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if((listBet[index] == 1 || listBet[index] == 4 || listBet[index] == 5) &amp;&amp; listWork[0] == listPattern[index]){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listBet[index] = -1;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentEarn += listPrevBetAmount[index] *2 + listPrevBetAmount[(index/2)*2 + (1-index%2)]*2;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Win on Lose Return To Delay&quot;);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;continue;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;nCurrentEarn -= listPrevBetAmount[index] *2 - listPrevBetAmount[(index/2)*2 + (1-index%2)]*2;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if(listPutChip[index] &gt;= (nGiveUp-1)){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(nGiveUp + &quot; Times Lose Return To Delay&quot;);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listBet[index] = -1;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;continue;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listPutChip[index]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listBet[index] = (listBet[index]+1) % 6;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if(listBet[index] == 0 || listBet[index] == 2 || listBet[index] == 3)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add((index/2)*2 + (1-index%2));&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;else&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add(index);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Lose on Lose Double Bet&quot; + &quot; : &quot; + listPattern[index] + &quot;-&quot; + listPattern[listPutPoint[listPutPoint.Count()-1]]);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;bBet = true;&#xD;&#xA;&#x9;&#x9;&#x9;} else {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if((listBet[index] == 0 || listBet[index] == 2 || listBet[index] == 3) &amp;&amp; listWork[0] == listPattern[index]){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Lose Double Bet&quot;);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = true;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentEarn -= listPrevBetAmount[index] *2 - listPrevBetAmount[(index/2)*2 + (1-index%2)]*2;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;} else if((listBet[index] == 1 || listBet[index] == 4 || listBet[index] == 5) &amp;&amp; listWork[0] != listPattern[index]){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Lose Double Bet&quot;);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = true;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentEarn -= listPrevBetAmount[index] *2 - listPrevBetAmount[(index/2)*2 + (1-index%2)]*2;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;else{&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentEarn += listPrevBetAmount[index] *2 + listPrevBetAmount[(index/2)*2 + (1-index%2)]*2;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;bBet = true;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listBet[index] = (listBet[index]+1) % 6;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if(listBet[index] == 0 || listBet[index] == 2 || listBet[index] == 3)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add((index/2)*2 + (1-index%2));&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;else&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add(index);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Bet&quot; + &quot; : &quot; + listPattern[index] + &quot;-&quot; + listPattern[listPutPoint[listPutPoint.Count()-1]]);&#xD;&#xA;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;}else{&#xD;&#xA;&#x9;&#x9;&#x9;bool bPattern = true;&#xD;&#xA;&#x9;&#x9;&#x9;for(int j=0; j&lt;nDelay; j++){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if(listWork[j] != listPattern[index]){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;bPattern = false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;break;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;if(bPattern){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;bBet = true;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listBet[index] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add((index/2) * 2 + (1-index%2));&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(&quot;Pattern Detect Start Betting&quot; + &quot; : &quot; + listPattern[index] + &quot;-&quot; + listPattern[listPutPoint[listPutPoint.Count()-1]]);&#xD;&#xA;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;}&#xD;&#xA;&#x9;}&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;if(bBet == false){&#xD;&#xA;&#x9;&#x9;Console.WriteLine(&quot;Delay&quot;);&#xD;&#xA;&#x9;&#x9;listPutPoint.Add(0);&#xD;&#xA;&#x9;&#x9;listPutPoint.Add(1);&#xD;&#xA;&#x9;}&#x9;&#xD;&#xA;} catch (Exception e) {&#xD;&#xA;&#x9;Console.WriteLine(e.ToString());&#xD;&#xA;}&#xD;&#xA;" DisplayName="Determine" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeCode_2" Language="CSharp">
+                    <ui:InvokeCode ContinueOnError="{x:Null}" Code="try{&#xD;&#xA;&#x9;int nDelay;&#xD;&#xA;&#x9;if(nCurrentDelay == 0 || nDelay2 == 0)&#xD;&#xA;&#x9;&#x9;nDelay = nDelay1;&#xD;&#xA;&#x9;else&#xD;&#xA;&#x9;&#x9;nDelay = nDelay2;&#xD;&#xA;&#x9;if(bSkip){&#xD;&#xA;&#x9;&#x9;for(int i=0; i&lt;listPattern.Length; i++){&#xD;&#xA;&#x9;&#x9;&#x9;nCurrentEarn -= listPrevBetAmount[i];&#xD;&#xA;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;for(int i=0; i&lt;6; i++){&#xD;&#xA;&#x9;&#x9;&#x9;if(listBet[i]&gt;=0)&#xD;&#xA;&#x9;&#x9;&#x9;{&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listPutChip[i]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listPutChip[(i/2)*2 + (1-i%2)]++;&#xD;&#xA;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;bSkip = false;&#xD;&#xA;&#x9;&#x9;return;&#xD;&#xA;&#x9;}&#xD;&#xA;&#x9;listPutPoint.Clear();&#xD;&#xA;&#xD;&#xA;&#x9;bool bBet = false;&#xD;&#xA;&#x9;List&lt;String&gt; listWork;&#xD;&#xA;&#x9;if(listResult_YZ.Count()&lt;nDelay){&#xD;&#xA;&#x9;&#x9;listPutPoint.Add(0);&#xD;&#xA;&#x9;&#x9;listPutPoint.Add(1);&#xD;&#xA;&#x9;&#x9;return;&#xD;&#xA;&#x9;}&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;for(int index = 0; index&lt;6; index++){&#xD;&#xA;&#x9;&#x9;if(index&lt;2)&#xD;&#xA;&#x9;&#x9;&#x9;listWork = listResult_YZ;&#xD;&#xA;&#x9;&#x9;else if(index&lt;4)&#xD;&#xA;&#x9;&#x9;&#x9;listWork = listResult_OE;&#xD;&#xA;&#x9;&#x9;else&#xD;&#xA;&#x9;&#x9;&#x9;listWork = listResult_FS;&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;if(listBet[index] &gt;= 0){&#xD;&#xA;&#x9;&#x9;&#x9;if(listLose[index] == true){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if(((listBet[index]+1) % 3 == 0 || (listBet[index]+1) % 3 == 1) &amp;&amp; listWork[0] != listPattern[index]){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listBet[index] = -1;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentEarn += listPrevBetAmount[index] + listPrevBetAmount[(index/2)*2 + (1-index%2)];&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(Convert.ToString(nCurrentEarn));&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;if(nCurrentDelayPos &gt;= 14 &amp;&amp; nDelay2 != 0){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentDelayPos = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentDelay = (nCurrentDelay+1) %2;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;continue;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if((listBet[index]+1) % 3 == 2 &amp;&amp; listWork[0] == listPattern[index]){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listBet[index] = -1;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentEarn += listPrevBetAmount[index] + listPrevBetAmount[(index/2)*2 + (1-index%2)];&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(Convert.ToString(nCurrentEarn));&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;if(nCurrentDelayPos &gt;= 14 &amp;&amp; nDelay2 != 0){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentDelayPos = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentDelay = (nCurrentDelay+1) %2;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;continue;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;nCurrentEarn -= listPrevBetAmount[index] + listPrevBetAmount[(index/2)*2 + (1-index%2)];&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(Convert.ToString(nCurrentEarn));&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if(listPutChip[index] &gt;= (nGiveUp-1)){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listBet[index] = -1;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;if(nCurrentDelayPos &gt;= 14 &amp;&amp; nDelay2 != 0){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentDelayPos = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentDelay = (nCurrentDelay+1) %2;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;continue;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listPutChip[index]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listBet[index] = (listBet[index]+1) % 6;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if(listBet[index] == 0 || listBet[index] == 2 || listBet[index] == 3)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add((index/2)*2 + (1-index%2));&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;else&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add(index);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;bBet = true;&#xD;&#xA;&#x9;&#x9;&#x9;} else {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if(((listBet[index]+1) % 3 == 0 || (listBet[index]+1) % 3 == 1) &amp;&amp; listWork[0] == listPattern[index]){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = true;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentEarn -= listPrevBetAmount[index] + listPrevBetAmount[(index/2)*2 + (1-index%2)];&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(Convert.ToString(nCurrentEarn));&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;} else if((listBet[index]+1) % 3 == 2 &amp;&amp; listWork[0] != listPattern[index]){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)]++;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listLose[index] = true;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentEarn -= listPrevBetAmount[index] + listPrevBetAmount[(index/2)*2 + (1-index%2)];&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(Convert.ToString(nCurrentEarn));&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;else{&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentEarn += listPrevBetAmount[index] + listPrevBetAmount[(index/2)*2 + (1-index%2)];&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;Console.WriteLine(Convert.ToString(nCurrentEarn));&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;if(nVersion &gt;= 2){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;listBet[index] = -1;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[index] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;listPutChip[(index/2)*2 + (1-index%2)] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;if(nCurrentDelayPos &gt;= 14 &amp;&amp; nDelay2 != 0){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentDelayPos = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;nCurrentDelay = (nCurrentDelay+1) %2;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;continue;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;bBet = true;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listBet[index] = (listBet[index]+1) % 6;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if(listBet[index] == 0 || listBet[index] == 2 || listBet[index] == 3)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add((index/2)*2 + (1-index%2));&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;else&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add(index);&#xD;&#xA;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;}else{&#xD;&#xA;&#x9;&#x9;&#x9;bool bPattern = true;&#xD;&#xA;&#x9;&#x9;&#x9;for(int j=0; j&lt;nDelay; j++){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if(listWork[j] != listPattern[index]){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;bPattern = false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;break;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;if(bPattern){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;bBet = true;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listBet[index] = 0;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;listPutPoint.Add((index/2) * 2 + (1-index%2));&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;nCurrentDelayPos ++;&#xD;&#xA;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;}&#xD;&#xA;&#x9;}&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;if(bBet == false){&#xD;&#xA;&#x9;&#x9;Console.WriteLine(&quot;Delay&quot;);&#xD;&#xA;&#x9;&#x9;listPutPoint.Add(0);&#xD;&#xA;&#x9;&#x9;listPutPoint.Add(1);&#xD;&#xA;&#x9;}&#x9;&#xD;&#xA;} catch (Exception e) {&#xD;&#xA;&#x9;Console.WriteLine(e.ToString());&#xD;&#xA;}&#xD;&#xA;" DisplayName="Determine" sap:VirtualizedContainerService.HintSize="334,164" sap2010:WorkflowViewState.IdRef="InvokeCode_2" Language="CSharp">
                       <ui:InvokeCode.Arguments>
                         <InOutArgument x:TypeArguments="s:Int32[]" x:Key="listPutChip">
                           <mva:VisualBasicReference x:TypeArguments="s:Int32[]" ExpressionText="listPutChip" />
@@ -273,8 +280,8 @@
                         <InArgument x:TypeArguments="s:String[]" x:Key="listPattern">
                           <mva:VisualBasicValue x:TypeArguments="s:String[]" ExpressionText="listPattern" />
                         </InArgument>
-                        <InArgument x:TypeArguments="x:Int32" x:Key="nDelay">
-                          <mva:VisualBasicValue x:TypeArguments="x:Int32" ExpressionText="nDelay" />
+                        <InArgument x:TypeArguments="x:Int32" x:Key="nDelay1">
+                          <mva:VisualBasicValue x:TypeArguments="x:Int32" ExpressionText="nDelay1" />
                         </InArgument>
                         <InOutArgument x:TypeArguments="x:Boolean" x:Key="bSkip">
                           <mva:VisualBasicReference x:TypeArguments="x:Boolean" ExpressionText="bSkip" />
@@ -282,7 +289,7 @@
                         <InArgument x:TypeArguments="x:Int32" x:Key="nGiveUp">
                           <mva:VisualBasicValue x:TypeArguments="x:Int32" ExpressionText="nGiveUp" />
                         </InArgument>
-                        <InArgument x:TypeArguments="x:Double" x:Key="nStartUp">
+                        <InArgument x:TypeArguments="x:Double" x:Key="rStartUp">
                           <mva:VisualBasicValue x:TypeArguments="x:Double" ExpressionText="rStartUp" />
                         </InArgument>
                         <InOutArgument x:TypeArguments="x:Int32" x:Key="nCurrentEarn">
@@ -291,6 +298,24 @@
                         <InArgument x:TypeArguments="s:Int32[]" x:Key="listPrevBetAmount">
                           <mva:VisualBasicValue x:TypeArguments="s:Int32[]" ExpressionText="listPrevBetAmount" />
                         </InArgument>
+                        <InArgument x:TypeArguments="x:Int32" x:Key="nStartUp">
+                          <mva:VisualBasicValue x:TypeArguments="x:Int32" ExpressionText="nStartUp" />
+                        </InArgument>
+                        <InArgument x:TypeArguments="x:Int32" x:Key="nVersion">
+                          <mva:VisualBasicValue x:TypeArguments="x:Int32" ExpressionText="nVersion" />
+                        </InArgument>
+                        <InArgument x:TypeArguments="x:Int32" x:Key="nDelay2">
+                          <mva:VisualBasicValue x:TypeArguments="x:Int32" ExpressionText="nDelay2" />
+                        </InArgument>
+                        <InArgument x:TypeArguments="x:Int32" x:Key="nDelayConvert">
+                          <mva:VisualBasicValue x:TypeArguments="x:Int32" ExpressionText="nDelayConvert" />
+                        </InArgument>
+                        <InOutArgument x:TypeArguments="x:Int32" x:Key="nCurrentDelay">
+                          <mva:VisualBasicReference x:TypeArguments="x:Int32" ExpressionText="nCurrentDelay" />
+                        </InOutArgument>
+                        <InOutArgument x:TypeArguments="x:Int32" x:Key="nCurrentDelayPos">
+                          <mva:VisualBasicReference x:TypeArguments="x:Int32" ExpressionText="nCurrentDelayPos" />
+                        </InOutArgument>
                       </ui:InvokeCode.Arguments>
                       <sap:WorkflowViewStateService.ViewState>
                         <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -299,10 +324,7 @@
                       </sap:WorkflowViewStateService.ViewState>
                     </ui:InvokeCode>
                     <FlowStep.Next>
-                      <FlowDecision x:Name="__ReferenceID1" DisplayName="Flow Decision" sap:VirtualizedContainerService.HintSize="79,87" sap2010:WorkflowViewState.IdRef="FlowDecision_5">
-                        <FlowDecision.Condition>
-                          <mva:VisualBasicValue x:TypeArguments="x:Boolean" ExpressionText="nCurrentEarn &gt;= nWinLimit" />
-                        </FlowDecision.Condition>
+                      <FlowDecision x:Name="__ReferenceID1" Condition="[nCurrentEarn &gt;= nWinLimit]" DisplayName="Flow Decision" sap:VirtualizedContainerService.HintSize="79,87" sap2010:WorkflowViewState.IdRef="FlowDecision_5">
                         <sap:WorkflowViewStateService.ViewState>
                           <scg:Dictionary x:TypeArguments="x:String, x:Object">
                             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -329,15 +351,26 @@
                               </sap:WorkflowViewStateService.ViewState>
                             </ui:MessageBox>
                             <FlowStep.Next>
-                              <x:Reference>__ReferenceID0</x:Reference>
+                              <FlowStep x:Name="__ReferenceID0">
+                                <sap:WorkflowViewStateService.ViewState>
+                                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                    <av:Point x:Key="ShapeLocation">20,509</av:Point>
+                                    <av:Size x:Key="ShapeSize">200,22</av:Size>
+                                  </scg:Dictionary>
+                                </sap:WorkflowViewStateService.ViewState>
+                                <TerminateWorkflow DisplayName="Terminate Workflow" Exception="[new System.ApplicationException]" sap:VirtualizedContainerService.HintSize="200,22" sap2010:WorkflowViewState.IdRef="TerminateWorkflow_2" Reason="Bot Has Stopped By Quit Condition">
+                                  <sap:WorkflowViewStateService.ViewState>
+                                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                    </scg:Dictionary>
+                                  </sap:WorkflowViewStateService.ViewState>
+                                </TerminateWorkflow>
+                              </FlowStep>
                             </FlowStep.Next>
                           </FlowStep>
                         </FlowDecision.True>
                         <FlowDecision.False>
-                          <FlowDecision x:Name="__ReferenceID2" DisplayName="Flow Decision" sap:VirtualizedContainerService.HintSize="79,87" sap2010:WorkflowViewState.IdRef="FlowDecision_6">
-                            <FlowDecision.Condition>
-                              <mva:VisualBasicValue x:TypeArguments="x:Boolean" ExpressionText="nCurrentEarn &lt;= nLoseLimit" />
-                            </FlowDecision.Condition>
+                          <FlowDecision x:Name="__ReferenceID2" Condition="[nCurrentEarn &lt;= nLoseLimit]" DisplayName="Flow Decision" sap:VirtualizedContainerService.HintSize="79,87" sap2010:WorkflowViewState.IdRef="FlowDecision_6">
                             <sap:WorkflowViewStateService.ViewState>
                               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -363,21 +396,7 @@
                                   </sap:WorkflowViewStateService.ViewState>
                                 </ui:MessageBox>
                                 <FlowStep.Next>
-                                  <FlowStep x:Name="__ReferenceID0">
-                                    <sap:WorkflowViewStateService.ViewState>
-                                      <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                                        <av:Point x:Key="ShapeLocation">20,509</av:Point>
-                                        <av:Size x:Key="ShapeSize">200,22</av:Size>
-                                      </scg:Dictionary>
-                                    </sap:WorkflowViewStateService.ViewState>
-                                    <TerminateWorkflow DisplayName="Terminate Workflow" Exception="[new System.ApplicationException]" sap:VirtualizedContainerService.HintSize="200,22" sap2010:WorkflowViewState.IdRef="TerminateWorkflow_2" Reason="Bot Has Stopped By Quit Condition">
-                                      <sap:WorkflowViewStateService.ViewState>
-                                        <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                                          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                                        </scg:Dictionary>
-                                      </sap:WorkflowViewStateService.ViewState>
-                                    </TerminateWorkflow>
-                                  </FlowStep>
+                                  <x:Reference>__ReferenceID0</x:Reference>
                                 </FlowStep.Next>
                               </FlowStep>
                             </FlowDecision.True>
@@ -537,7 +556,7 @@
                                     <av:PointCollection x:Key="ConnectorLocation">300,255.5 300,264.5</av:PointCollection>
                                   </scg:Dictionary>
                                 </sap:WorkflowViewStateService.ViewState>
-                                <Flowchart DisplayName="Put Chips" sap:VirtualizedContainerService.HintSize="674,636" sap2010:WorkflowViewState.IdRef="Flowchart_7">
+                                <Flowchart DisplayName="Put Chips" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="Flowchart_7">
                                   <Flowchart.Variables>
                                     <Variable x:TypeArguments="x:Int32" Default="[If ((listBet(listPutPoint(indexPoint)) &gt;= 0) Or (listBet((listPutPoint(indexPoint)\2)*2 + (1-(listPutPoint(indexPoint) Mod 2))) &gt;= 0), nStartUp*CInt(2 ^ listPutChip(listPutPoint(indexPoint))) , 1)]" Name="nBetAmount" />
                                     <Variable x:TypeArguments="x:Int32" Default="8" Name="nBetIndex" />
@@ -554,7 +573,7 @@
                                   <Flowchart.StartNode>
                                     <x:Reference>__ReferenceID13</x:Reference>
                                   </Flowchart.StartNode>
-                                  <FlowStep x:Name="__ReferenceID7">
+                                  <FlowStep x:Name="__ReferenceID6">
                                     <sap:WorkflowViewStateService.ViewState>
                                       <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                         <av:Point x:Key="ShapeLocation">200,324.5</av:Point>
@@ -611,7 +630,7 @@
                                           </sap:WorkflowViewStateService.ViewState>
                                         </ui:InvokeCode>
                                         <FlowStep.Next>
-                                          <FlowDecision x:Name="__ReferenceID11" Condition="[nBetAmount &gt;= listChipValue(nBetIndex)]" DisplayName="Flow Decision" sap:VirtualizedContainerService.HintSize="79,87" sap2010:WorkflowViewState.IdRef="FlowDecision_3" True="{x:Reference __ReferenceID7}">
+                                          <FlowDecision x:Name="__ReferenceID11" Condition="[nBetAmount &gt;= listChipValue(nBetIndex)]" DisplayName="Flow Decision" sap:VirtualizedContainerService.HintSize="79,87" sap2010:WorkflowViewState.IdRef="FlowDecision_3" True="{x:Reference __ReferenceID6}">
                                             <sap:WorkflowViewStateService.ViewState>
                                               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -622,7 +641,7 @@
                                               </scg:Dictionary>
                                             </sap:WorkflowViewStateService.ViewState>
                                             <FlowDecision.False>
-                                              <FlowDecision x:Name="__ReferenceID6" Condition="[nBetIndex &gt; 0]" DisplayName="Flow Decision" sap:VirtualizedContainerService.HintSize="79,87" sap2010:WorkflowViewState.IdRef="FlowDecision_4">
+                                              <FlowDecision x:Name="__ReferenceID7" Condition="[nBetIndex &gt; 0]" DisplayName="Flow Decision" sap:VirtualizedContainerService.HintSize="79,87" sap2010:WorkflowViewState.IdRef="FlowDecision_4">
                                                 <sap:WorkflowViewStateService.ViewState>
                                                   <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                                     <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -698,12 +717,12 @@
                                                               </sap:WorkflowViewStateService.ViewState>
                                                             </ui:Click>
                                                             <FlowStep.Next>
-                                                              <x:Reference>__ReferenceID7</x:Reference>
+                                                              <x:Reference>__ReferenceID6</x:Reference>
                                                             </FlowStep.Next>
                                                           </FlowStep>
                                                         </FlowDecision.True>
                                                         <FlowDecision.False>
-                                                          <x:Reference>__ReferenceID6</x:Reference>
+                                                          <x:Reference>__ReferenceID7</x:Reference>
                                                         </FlowDecision.False>
                                                       </FlowDecision>
                                                     </FlowStep.Next>
@@ -720,7 +739,7 @@
                                   <x:Reference>__ReferenceID9</x:Reference>
                                   <x:Reference>__ReferenceID10</x:Reference>
                                   <x:Reference>__ReferenceID11</x:Reference>
-                                  <x:Reference>__ReferenceID6</x:Reference>
+                                  <x:Reference>__ReferenceID7</x:Reference>
                                   <x:Reference>__ReferenceID12</x:Reference>
                                   <FlowStep x:Name="__ReferenceID13">
                                     <sap:WorkflowViewStateService.ViewState>
@@ -730,20 +749,16 @@
                                         <av:PointCollection x:Key="ConnectorLocation">120,155.02 120,185.02 0,185.02 0,96.5 300,96.5 300,126.5</av:PointCollection>
                                       </scg:Dictionary>
                                     </sap:WorkflowViewStateService.ViewState>
-                                    <ui:InvokeCode ContinueOnError="{x:Null}" Code="listPrevBetAmount[listPutPoint[indexPoint]] = nBetAmount;" DisplayName="Set Bet Amount" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeCode_8" Language="CSharp">
+                                    <ui:InvokeCode ContinueOnError="{x:Null}" Code="If (nVersion &gt;= 2)&#xD;&#xA;&#x9;nBetAmount = If ((listBet(listPutPoint(indexPoint)) &gt;= 0) Or (listBet((listPutPoint(indexPoint)\2)*2 + (1-(listPutPoint(indexPoint) Mod 2))) &gt;= 0), nStartUp*CInt(2 ^ listPutChip(listPutPoint(indexPoint)))-1 , 1)&#xD;&#xA;Else&#xD;&#xA;&#x9;nBetAmount = If ((listBet(listPutPoint(indexPoint)) &gt;= 0) Or (listBet((listPutPoint(indexPoint)\2)*2 + (1-(listPutPoint(indexPoint) Mod 2))) &gt;= 0), nStartUp*CInt(2 ^ listPutChip(listPutPoint(indexPoint))) , 1)&#xD;&#xA;End If&#xD;&#xA;If (nBetAmount = 0)&#xD;&#xA;&#x9;nBetAmount = 1&#xD;&#xA;End If&#xD;&#xA;listPrevBetAmount(listPutPoint(indexPoint)) = nBetAmount" DisplayName="Set Bet Amount" sap:VirtualizedContainerService.HintSize="334,164" sap2010:WorkflowViewState.IdRef="InvokeCode_8">
                                       <ui:InvokeCode.Arguments>
-                                        <InArgument x:TypeArguments="x:Int32" x:Key="nBetAmount">
-                                          <mva:VisualBasicValue x:TypeArguments="x:Int32" ExpressionText="nBetAmount" />
-                                        </InArgument>
-                                        <InOutArgument x:TypeArguments="s:Int32[]" x:Key="listPrevBetAmount">
-                                          <mva:VisualBasicReference x:TypeArguments="s:Int32[]" ExpressionText="listPrevBetAmount" />
-                                        </InOutArgument>
-                                        <InArgument x:TypeArguments="scg:List(x:Int32)" x:Key="listPutPoint">
-                                          <mva:VisualBasicValue x:TypeArguments="scg:List(x:Int32)" ExpressionText="listPutPoint" />
-                                        </InArgument>
-                                        <InArgument x:TypeArguments="x:Int32" x:Key="indexPoint">
-                                          <mva:VisualBasicValue x:TypeArguments="x:Int32" ExpressionText="indexPoint" />
-                                        </InArgument>
+                                        <InOutArgument x:TypeArguments="x:Int32" x:Key="nBetAmount">[nBetAmount]</InOutArgument>
+                                        <InOutArgument x:TypeArguments="s:Int32[]" x:Key="listPrevBetAmount">[listPrevBetAmount]</InOutArgument>
+                                        <InArgument x:TypeArguments="scg:List(x:Int32)" x:Key="listPutPoint">[listPutPoint]</InArgument>
+                                        <InArgument x:TypeArguments="x:Int32" x:Key="indexPoint">[indexPoint]</InArgument>
+                                        <InArgument x:TypeArguments="s:Int32[]" x:Key="listBet">[listBet]</InArgument>
+                                        <InArgument x:TypeArguments="x:Int32" x:Key="nStartUp">[nStartUp]</InArgument>
+                                        <InArgument x:TypeArguments="x:Int32" x:Key="nVersion">[nVersion]</InArgument>
+                                        <InArgument x:TypeArguments="s:Int32[]" x:Key="listPutChip">[listPutChip]</InArgument>
                                       </ui:InvokeCode.Arguments>
                                       <sap:WorkflowViewStateService.ViewState>
                                         <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -793,14 +808,10 @@
                                 <av:PointCollection x:Key="ConnectorLocation">300,165.5 300,204.5</av:PointCollection>
                               </scg:Dictionary>
                             </sap:WorkflowViewStateService.ViewState>
-                            <ui:InvokeCode ContinueOnError="{x:Null}" Code="for(int i=0; i&lt;listBet.Length; i++)&#xD;&#xA;{&#xD;&#xA;&#x9;listPrevBetAmount[i] = 0;&#xD;&#xA;}" DisplayName="InitBetAmount" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeCode_7" Language="CSharp">
+                            <ui:InvokeCode ContinueOnError="{x:Null}" Code="for(int i=0; i&lt;listBet.Length; i++)&#xA;{&#xA;&#x9;listPrevBetAmount[i] = 0;&#xA;}" DisplayName="InitBetAmount" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeCode_7" Language="CSharp">
                               <ui:InvokeCode.Arguments>
-                                <InOutArgument x:TypeArguments="s:Int32[]" x:Key="listPrevBetAmount">
-                                  <mva:VisualBasicReference x:TypeArguments="s:Int32[]" ExpressionText="listPrevBetAmount" />
-                                </InOutArgument>
-                                <InArgument x:TypeArguments="s:Int32[]" x:Key="listBet">
-                                  <mva:VisualBasicValue x:TypeArguments="s:Int32[]" ExpressionText="listBet" />
-                                </InArgument>
+                                <InOutArgument x:TypeArguments="s:Int32[]" x:Key="listPrevBetAmount">[listPrevBetAmount]</InOutArgument>
+                                <InArgument x:TypeArguments="s:Int32[]" x:Key="listBet">[listBet]</InArgument>
                               </ui:InvokeCode.Arguments>
                               <sap:WorkflowViewStateService.ViewState>
                                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -844,7 +855,7 @@
                                 <av:Size x:Key="ShapeSize">200,51</av:Size>
                               </scg:Dictionary>
                             </sap:WorkflowViewStateService.ViewState>
-                            <ui:InvokeCode ContinueOnError="{x:Null}" Code="int number = Int32.Parse(result_text);&#xA;&#xA;try{&#xA;&#x9;if (number != 0) {&#xA;&#x9;&#x9;if (number&lt;13)&#xA;&#x9;&#x9;&#x9;result_abc.Insert(0, &quot;A&quot;);&#xA;&#x9;&#x9;else if(number&gt;12 &amp;&amp; number&lt;25)&#xA;&#x9;&#x9;&#x9;result_abc.Insert(0, &quot;B&quot;);&#xA;&#x9;&#x9;else if(number&gt;24 &amp;&amp; number&lt;37)&#xA;&#x9;&#x9;&#x9;result_abc.Insert(0, &quot;C&quot;);&#xA;&#x9;&#x9;&#xA;&#x9;&#x9;if(number&lt;19)&#xA;&#x9;&#x9;&#x9;result_fs.Insert(0, &quot;F&quot;);&#xA;&#x9;&#x9;else if(number&gt;18 &amp;&amp; number&lt;37)&#xA;&#x9;&#x9;&#x9;result_fs.Insert(0, &quot;S&quot;);&#xA;&#x9;&#x9;&#xA;&#x9;&#x9;if(number % 2 == 0)&#xA;&#x9;&#x9;&#x9;result_oe.Insert(0, &quot;E&quot;);&#xA;&#x9;&#x9;else if(number % 2 == 1)&#xA;&#x9;&#x9;&#x9;result_oe.Insert(0, &quot;O&quot;);&#xA;&#x9;&#xA;&#x9;&#x9;if(number % 3 == 1)&#xA;&#x9;&#x9;&#x9;result_123.Insert(0, &quot;1&quot;);&#xA;&#x9;&#x9;else if(number % 3 == 2)&#xA;&#x9;&#x9;&#x9;result_123.Insert(0, &quot;2&quot;);&#xA;&#x9;&#x9;else if(number % 3 == 0)&#xA;&#x9;&#x9;&#x9;result_123.Insert(0, &quot;3&quot;);&#xA;&#x9;&#x9;&#xA;&#x9;&#x9;List&lt;String&gt; red_list = new List&lt;String&gt;(){&quot;1&quot;,&quot;3&quot;,&quot;5&quot;,&quot;7&quot;,&quot;9&quot;,&quot;12&quot;,&quot;14&quot;,&quot;16&quot;,&quot;18&quot;,&quot;19&quot;,&quot;21&quot;,&quot;23&quot;,&quot;25&quot;,&quot;27&quot;,&quot;30&quot;,&quot;32&quot;,&quot;34&quot;,&quot;36&quot;};&#xA;&#x9;&#x9;List&lt;String&gt; black_list = new List&lt;String&gt;(){&quot;2&quot;,&quot;4&quot;,&quot;6&quot;,&quot;8&quot;,&quot;10&quot;,&quot;11&quot;,&quot;13&quot;,&quot;15&quot;,&quot;17&quot;,&quot;20&quot;,&quot;22&quot;,&quot;24&quot;,&quot;26&quot;,&quot;28&quot;,&quot;29&quot;,&quot;31&quot;,&quot;33&quot;,&quot;35&quot;};&#xA;&#x9;&#x9;&#xA;&#x9;&#x9;if(red_list.Contains(result_text))&#xA;&#x9;&#x9;&#x9;result_yz.Insert(0, &quot;Y&quot;);&#xA;&#x9;&#x9;else if(black_list.Contains(result_text))&#xA;&#x9;&#x9;&#x9;result_yz.Insert(0, &quot;Z&quot;);&#xA;&#x9;&#x9;&#xA;&#x9;&#x9;result.Insert(0, result_text);&#xA;&#x9;&#x9;Console.WriteLine(&quot;-------------&quot;);&#xA;&#x9;&#x9;Console.WriteLine(&quot;Log:&quot; + result.Count() + &quot; --- &quot;);&#xA;&#x9;&#x9;Console.WriteLine(result[0]);&#xA;&#x9;&#x9;Console.WriteLine(result_abc[0]);&#xA;&#x9;&#x9;Console.WriteLine(result_fs[0]);&#xA;&#x9;&#x9;Console.WriteLine(result_oe[0]);&#xA;&#x9;&#x9;Console.WriteLine(result_123[0]);&#xA;&#x9;&#x9;Console.WriteLine(result_yz[0]);&#xA;&#x9;} else{&#xA;&#x9;&#x9;Console.WriteLine(&quot;Req Skip&quot;);&#xA;&#x9;&#x9;bSkip = true;&#xA;&#x9;}&#xA;} catch (Exception e){&#xA;&#x9;Console.WriteLine(e.ToString());&#xA;}" DisplayName="Invoke code" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeCode_1" Language="CSharp">
+                            <ui:InvokeCode ContinueOnError="{x:Null}" Code="int number = Int32.Parse(result_text);&#xA;&#xA;try{&#xA;&#x9;if (number != 0) {&#xA;&#x9;&#x9;if (number&lt;13)&#xA;&#x9;&#x9;&#x9;result_abc.Insert(0, &quot;A&quot;);&#xA;&#x9;&#x9;else if(number&gt;12 &amp;&amp; number&lt;25)&#xA;&#x9;&#x9;&#x9;result_abc.Insert(0, &quot;B&quot;);&#xA;&#x9;&#x9;else if(number&gt;24 &amp;&amp; number&lt;37)&#xA;&#x9;&#x9;&#x9;result_abc.Insert(0, &quot;C&quot;);&#xA;&#x9;&#x9;&#xA;&#x9;&#x9;if(number&lt;19)&#xA;&#x9;&#x9;&#x9;result_fs.Insert(0, &quot;F&quot;);&#xA;&#x9;&#x9;else if(number&gt;18 &amp;&amp; number&lt;37)&#xA;&#x9;&#x9;&#x9;result_fs.Insert(0, &quot;S&quot;);&#xA;&#x9;&#x9;&#xA;&#x9;&#x9;if(number % 2 == 0)&#xA;&#x9;&#x9;&#x9;result_oe.Insert(0, &quot;E&quot;);&#xA;&#x9;&#x9;else if(number % 2 == 1)&#xA;&#x9;&#x9;&#x9;result_oe.Insert(0, &quot;O&quot;);&#xA;&#x9;&#xA;&#x9;&#x9;if(number % 3 == 1)&#xA;&#x9;&#x9;&#x9;result_123.Insert(0, &quot;1&quot;);&#xA;&#x9;&#x9;else if(number % 3 == 2)&#xA;&#x9;&#x9;&#x9;result_123.Insert(0, &quot;2&quot;);&#xA;&#x9;&#x9;else if(number % 3 == 0)&#xA;&#x9;&#x9;&#x9;result_123.Insert(0, &quot;3&quot;);&#xA;&#x9;&#x9;&#xA;&#x9;&#x9;List&lt;String&gt; red_list = new List&lt;String&gt;(){&quot;1&quot;,&quot;3&quot;,&quot;5&quot;,&quot;7&quot;,&quot;9&quot;,&quot;12&quot;,&quot;14&quot;,&quot;16&quot;,&quot;18&quot;,&quot;19&quot;,&quot;21&quot;,&quot;23&quot;,&quot;25&quot;,&quot;27&quot;,&quot;30&quot;,&quot;32&quot;,&quot;34&quot;,&quot;36&quot;};&#xA;&#x9;&#x9;List&lt;String&gt; black_list = new List&lt;String&gt;(){&quot;2&quot;,&quot;4&quot;,&quot;6&quot;,&quot;8&quot;,&quot;10&quot;,&quot;11&quot;,&quot;13&quot;,&quot;15&quot;,&quot;17&quot;,&quot;20&quot;,&quot;22&quot;,&quot;24&quot;,&quot;26&quot;,&quot;28&quot;,&quot;29&quot;,&quot;31&quot;,&quot;33&quot;,&quot;35&quot;};&#xA;&#x9;&#x9;&#xA;&#x9;&#x9;if(red_list.Contains(result_text))&#xA;&#x9;&#x9;&#x9;result_yz.Insert(0, &quot;Y&quot;);&#xA;&#x9;&#x9;else if(black_list.Contains(result_text))&#xA;&#x9;&#x9;&#x9;result_yz.Insert(0, &quot;Z&quot;);&#xA;&#x9;&#x9;&#xA;&#x9;&#x9;result.Insert(0, result_text);&#xA;&#x9;} else{&#xA;&#x9;&#x9;bSkip = true;&#xA;&#x9;}&#xA;} catch (Exception e){&#xA;&#x9;Console.WriteLine(e.ToString());&#xA;}" DisplayName="Invoke code" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeCode_1" Language="CSharp">
                               <ui:InvokeCode.Arguments>
                                 <InOutArgument x:TypeArguments="x:String" x:Key="result_text">[txtResult]</InOutArgument>
                                 <InOutArgument x:TypeArguments="scg:List(x:String)" x:Key="result">[listResult]</InOutArgument>
